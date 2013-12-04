@@ -93,11 +93,10 @@
 	    this.importFile = function (file) {
 		var reader = new FileReader();
 		reader.addEventListener('loadend', function(e) {
-		    var kml = $.parseXML(e.target.result);
-		    var coordinates = $(kml).find('coordinates').text();
-		    var pts = coordinates.split(/ /).map(function (item) {
-			var ns = item.split(/,/);
-			return new google.maps.LatLng(parseFloat(ns[1]), parseFloat(ns[0]));
+		    var obj = JSON.parse(e.target.result);
+		    var coordinates = obj.coordinates;
+		    var pts = coordinates.map(function (item) {
+			return new google.maps.LatLng(item[1], item[0]);
 		    });
 		    var path = new google.maps.MVCArray(pts);
 		    self.pathManager.showPath(path, true);
