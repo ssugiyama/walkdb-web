@@ -316,21 +316,22 @@
 	
 //	$scope.selectionLength = 0;
 
-	function searchCallback (data, show) {
-	    if (data.current_page > 1) {
-		$scope.walks.push.apply($scope.walks, data.items);
+	function searchCallback (data, show, append) {
+	    if (append) {
+		$scope.walks.push.apply($scope.walks, data.rows);
 	    }
 	    else {
-		$scope.walks = data.items;
+		$scope.walks = data.rows;
 	    }
+console.debug(data.params);
 	    $scope.params = data.params;
-	    $scope.total_count = data.total_count;
+	    $scope.total_count = data.count;
 	    
 	    if (show) {
-		walkService.pathManager.showPath(data.items[0].path, true);
+		walkService.pathManager.showPath(data.rows[0].path, true);
 	    }
 	    $scope.result = {};
-	    data.items.forEach(function (item, index, array) {
+	    data.rows.forEach(function (item, index, array) {
 		$scope.result[item.id] = false;
 	    });
 	}
@@ -346,7 +347,7 @@
 	$scope.searchForm = {};
 	$scope.searchForm.type = 'all';
 	$scope.searchForm.order = "new_first";
-	$scope.searchForm.per_page = 20;
+	$scope.searchForm.limit = 20;
 	$scope.search = function () {
 	    if ($scope.searchForm.type == 'neighbor') {
 		$scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();
@@ -381,7 +382,7 @@
 	$scope.getNext = function (params) {
 	    $http.get('/search?' + params).success(function (data)
 						   {
-						       searchCallback(data, false);
+						       searchCallback(data, false, true);
 						   });
 	};
 
@@ -425,7 +426,8 @@ console.debug(ids);
 	    
 	};
 
-	$scope.download = function (id) {
+	$scope.download = function (id, ev) {
+	    ev.stopImmediatePropagation();
 	    window.location.href= "/export/" + id;
 	};
 	$scope.export = function () {
