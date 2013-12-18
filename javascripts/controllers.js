@@ -321,6 +321,7 @@
 		$scope.walks.push.apply($scope.walks, data.rows);
 	    }
 	    else {
+                $scope.result = {};
 		$scope.walks = data.rows;
 	    }
 console.debug(data.params);
@@ -330,7 +331,6 @@ console.debug(data.params);
 	    if (show) {
 		walkService.pathManager.showPath(data.rows[0].path, true);
 	    }
-	    $scope.result = {};
 	    data.rows.forEach(function (item, index, array) {
 		$scope.result[item.id] = false;
 	    });
