@@ -473,6 +473,9 @@ console.debug(ids);
 	  }
 	};
 	$scope.save = function () {
+	    if ($scope.selection.id && ! confirm('Are you shure to overwrite?')) {
+		rerurn;
+	    }
 	    $scope.selection.path = walkService.pathManager.getEncodedSelection();
 	    $http.post('/save', $scope.selection).success(function (data) {
 		$scope.selection = data;
