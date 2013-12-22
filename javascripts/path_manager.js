@@ -185,5 +185,19 @@
 	else 
 	    this.set('length', "");
     }
+    PathManager.prototype.selectionAsGeoJSON = function () {
+	if (this.selection) {
+	    return JSON.stringify({
+		type: 'LineString',
+		coordinates: this.selection.getPath().getArray().map(function (p) {
+		    return [p.lng(), p.lat()];
+		})
+	    });
+	}
+	return '';
+    };
+
     global.PathManager = PathManager;
+    
+    
 })(this);

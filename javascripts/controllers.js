@@ -52,12 +52,10 @@
 		self.areas = {};
 		self.pathManager = new PathManager({map: self.map});
 		google.maps.event.addListener(self.pathManager, 'editable_changed', function () {
-		    console.log('editable_changed');
 		    scope.editable = self.pathManager.get('editable');
 		    setTimeout(function () {scope.$digest();}, 0);
 		});
 		google.maps.event.addListener(self.pathManager, 'length_changed', function () {
-		    console.log('length_changed');
 		    scope.selectionLength = self.pathManager.get('length');
 		    setTimeout(function () {scope.$digest();}, 0);
 		});
@@ -102,6 +100,16 @@
 		    self.pathManager.showPath(path, true);
 		});		
 		reader.readAsText(file);
+	    };
+	    this.importJSON = function (json) {
+		console.log('json', json);
+		var obj = JSON.parse(json);
+		var coordinates = obj.coordinates;
+		var pts = coordinates.map(function (item) {
+		    return new google.maps.LatLng(item[1], item[0]);
+		});
+		var path = new google.maps.MVCArray(pts);
+		self.pathManager.showPath(path, true);
 	    };
 	    this.requestElevation = function (){
 		var path = [];
@@ -251,7 +259,6 @@
 		return pph;
 
 	    };
-	    
 	};
 
 	return new service();
@@ -260,20 +267,6 @@
     module.directive('myMap', function (walkService){
 	return function (scope, elm, attrs) {
 	    walkService.initMap(scope, angular.element(elm)[0]);
-
-	    $(elm).bind("drop", function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-		var files = e.originalEvent.dataTransfer.files;
-		walkService.importFile(files[0]);
-	    }).bind("dragenter", function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-	    }).bind("dragover", function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-	    });
-
 	};
     });
 
@@ -290,7 +283,7 @@
 		setTimeout(function () {scope.$digest();}, 0);
 	    });
 	    walkService.map.setStreetView(walkService.panorama);
-
+	    
 	};
     });
 
@@ -310,7 +303,37 @@
 	    });
 	};
     });
-		     
+    module.directive('myModal', function (walkService){
+	return function (scope, elm, attrs) {
+	    walkService.modal = elm;
+	    var textarea = $(elm).find('textarea');
+	    textarea.on('click', function () {
+		this.select(); 
+	    });
+	    var reader = new FileReader();
+	    reader.addEventListener('loadend', function(e) {
+console.log(e.target.result);
+		scope.path_json = e.target.result;
+		setTimeout(function () {scope.$digest();}, 0);
+	    });		
+
+	    textarea.bind("drop", function (e) {
+console.log('kita')
+		e.stopPropagation();
+		e.preventDefault();
+		var files = e.originalEvent.dataTransfer.files;
+		reader.readAsText(files[0]);
+	    }).bind("dragenter", function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+	    }).bind("dragover", function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+	    });
+
+	};
+    });
+    		     
     global.WalkController = function ($scope, $http, walkService) {
 	var self = this;
 	
@@ -324,7 +347,6 @@
                 $scope.result = {};
 		$scope.walks = data.rows;
 	    }
-console.debug(data.params);
 	    $scope.params = data.params;
 	    $scope.total_count = data.count;
 	    
@@ -367,7 +389,6 @@ console.debug(data.params);
 	    }
 
 	    if ($scope.searchForm.type == 'cross') {
-		console.log(walkService.pathManager.getEncodedSelection());
 		$scope.searchForm.searchPath = walkService.pathManager.getEncodedSelection();
 	    }
 	    else {
@@ -388,6 +409,11 @@ console.debug(data.params);
 
 	$scope.loadPath = function () {
 	    walkService.pathManager.loadFromLocalStorage();
+	};
+	
+	$scope.showModal = function () {
+	    $scope.path_json = walkService.pathManager.selectionAsGeoJSON();
+	    $(walkService.modal).modal('show');
 	};
 	$scope.resetAreas = function () {
 	    Object.keys(walkService.areas).forEach(function (id) {
@@ -414,7 +440,6 @@ console.debug(data.params);
 	};
 	$scope.showPaths = function () {
 	    var ids =  Object.keys($scope.result);
-console.debug(ids);
 	    $http.post('/show' , {id : ids}).success(function (data) {
 		for (var i = 0; i < data.length; i++) {
 		    walkService.pathManager.showPath(data[i].path, false);
@@ -539,6 +564,10 @@ console.debug(ids);
 	    walkService.showPanorama();
 	    $scope.panoramaIndex = walkService.panoramaIndex+1;
 	};
+	$scope.importJSON = function (json) {
+	    walkService.importJSON(json);
+	    $(walkService.modal).modal('hide');
+	};
 	$(document).bind("drop", function (e) {
 	    e.stopPropagation();
 	    e.preventDefault();
@@ -549,7 +578,8 @@ console.debug(ids);
 	    e.stopPropagation();
 	    e.preventDefault();
 	});
-	
-    };
+
+    }
+
 
 })(this);
