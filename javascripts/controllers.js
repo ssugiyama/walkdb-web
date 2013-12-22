@@ -407,10 +407,6 @@ console.log('kita')
 						   });
 	};
 
-	$scope.loadPath = function () {
-	    walkService.pathManager.loadFromLocalStorage();
-	};
-	
 	$scope.showModal = function () {
 	    $scope.path_json = walkService.pathManager.selectionAsGeoJSON();
 	    $(walkService.modal).modal('show');

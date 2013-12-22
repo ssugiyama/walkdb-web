@@ -44,7 +44,6 @@
 		self.addPolyline(polyline);
 		self.set('selection', polyline);
 	    }
-	    self.storeInLocalStorage();
 	    
 	    self.drawingManager.setDrawingMode(null);
 	});
@@ -123,7 +122,6 @@
 	}
 	google.maps.event.addListener(pl, 'rightclick', deleteNode);
 	function path_callback () {
-	    self.storeInLocalStorage();
 	    self.updateLength();
 	}
 	google.maps.event.addListener(pl.getPath(), 'insert_at', path_callback);
@@ -144,7 +142,6 @@
             var path = this.selection.getPath();
 
             var len = path.getLength();
-	    this.storeInLocalStorage();
 	}
 	this.updateLength();
 	this.unbind('editable');
@@ -159,26 +156,7 @@
 	    return null;
 	}
     }
-    PathManager.prototype.storeInLocalStorage = function (){
-	if (localStorage && this.selection) {
-	    console.log('store');
-	    localStorage['editingPath'] = this.getEncodedSelection();
-	}
-    }
 
-    PathManager.prototype.clearLocalStorage = function (){
-	if (localStorage) {
-	    console.log('delete');
-            delete localStorage['editingPath'];
-	}
-    }
-
-    PathManager.prototype.loadFromLocalStorage = function (){
-	if(! localStorage || !localStorage['editingPath']) return false;
-	console.log('load');
-	this.showPath(localStorage['editingPath'], true);
-	return true;
-    }
     PathManager.prototype.updateLength = function (){   
 	if (this.selection)
 	    this.set('length', google.maps.geometry.spherical.computeLength(this.selection.getPath())/1000);
