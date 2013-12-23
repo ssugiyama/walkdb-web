@@ -564,6 +564,20 @@ console.log('kita')
 	    walkService.importJSON(json);
 	    $(walkService.modal).modal('hide');
 	};
+	$scope.stop_event = function (ev) {
+	    ev.stopImmediatePropagation();
+	    return true;
+	};
+	$scope.twitter_url = function (item, hashtags) {
+	    var params = {
+		url : location.protocol + "//" + location.host + "?id=" + item.id,
+		text: item.date + ' : ' + item.start + ' - ' + item.end + ' (' + Math.round(item.length*10)/10 + 'km)',
+		hashtags : hashtags
+	    };
+	    return 'https://twitter.com/share?' +  Object.keys(params).map(function (key) {
+		return key + '=' + encodeURIComponent(params[key]);
+	    }).join('&');
+	};
 	$(document).bind("drop", function (e) {
 	    e.stopPropagation();
 	    e.preventDefault();
