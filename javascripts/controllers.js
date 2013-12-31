@@ -368,7 +368,7 @@ console.log('kita')
 	$scope.currentService = 'none';
 	$scope.searchForm = {};
 	$scope.searchForm.type = 'all';
-	$scope.searchForm.order = "new_first";
+	$scope.searchForm.order = "newest_first";
 	$scope.searchForm.limit = 20;
 	$scope.search = function () {
 	    if ($scope.searchForm.type == 'neighbor') {
@@ -388,7 +388,7 @@ console.log('kita')
 		$scope.searchForm.areas = "";
 	    }
 
-	    if ($scope.searchForm.type == 'cross') {
+	    if ($scope.searchForm.type == 'similar') {
 		$scope.searchForm.searchPath = walkService.pathManager.getEncodedSelection();
 	    }
 	    else {
@@ -527,6 +527,9 @@ console.log('kita')
 	$scope.$watch('searchForm.type', function (newValue, prevValue) {
 	    walkService.showDistanceWidget(newValue == 'neighbor');
 	    walkService.showAreas(newValue == 'areas');
+	    if (newValue != 'neighbor' && newValue != 'similar' && 
+		$scope.searchForm.order == 'nearest_first') 
+		$scope.searchForm.order = 'newest_first';
 	});
 	$scope.$watch('editable', function (newValue, prevValue) {
 	    if (walkService.pathManager.get('editable') != newValue)
