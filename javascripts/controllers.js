@@ -1,7 +1,7 @@
 (function (global) {
     'use strict';
     
-    var module = angular.module('walkApp', []);
+    var module = angular.module('walkApp', ['ngCookies']);
     module.factory('walkService', function () {
 	var service = function () {
 	    var self = this;
@@ -334,7 +334,7 @@ console.log('kita')
 	};
     });
     		     
-    global.WalkController = function ($scope, $http, walkService) {
+    global.WalkController = function ($scope, $http, $cookies, walkService) {
 	var self = this;
 	
 //	$scope.selectionLength = 0;
@@ -364,12 +364,17 @@ console.log('kita')
 		searchCallback(data, true);
 	    });
 	}
-	
+        $scope.themes = ['amelia', 'cerulean', 'cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'lumen', 'readable', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
+	$scope.currentTheme = $cookies.currentTheme || $scope.themes[0];
 	$scope.currentService = 'none';
 	$scope.searchForm = {};
 	$scope.searchForm.type = 'all';
 	$scope.searchForm.order = "newest_first";
 	$scope.searchForm.limit = 20;
+	$scope.setTheme = function (th) {
+	    $scope.currentTheme = th;
+	    $cookies.currentTheme = th;
+	};
 	$scope.search = function () {
 	    if ($scope.searchForm.type == 'neighbor') {
 		$scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();

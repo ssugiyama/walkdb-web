@@ -134,12 +134,6 @@ tr {
 .table-wrapper table {
     width: 100%;
 }
-#panorama_control div {
-    display: inline-block;
-    background-color: #ffffff;
-    opacity: 0.8;
-    border-radius: 3px;
-}
 
 .modal textarea {
     width: 100%;
