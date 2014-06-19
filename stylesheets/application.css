@@ -20,34 +20,82 @@ td.name div {
 
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -o-flex;
+	display: flex;
+    -webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-flex-direction: column;
+	-o-flex-direction: column;
+	flex-direction: column;
+}
+
 #nav {
     width: 100%;
-    position: absolute;
-    top: 0px;
-    left: 0px;
 }
+
+#main-row {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    -o-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex:  1 1 auto ;
+    -moz-flex:  1 1 auto ;
+    -ms-flex:  1 1 auto ;
+    -o-flex:  1 1 auto ;
+    flex: 1 1 auto ;
+
+}
+
 #side {
-        width: 380px;
-        position: absolute;
-        top: 44px;
-        left: 0px;  
-	bottom: 0;
+    -webkit-flex:  0 0 400px ;
+    -moz-flex:  0 0 400px ;
+    -ms-flex:  0 0 400px ;
+    -o-flex:  0 0 400px ;
+    flex: 0 0 400px ;
+    overflow: scroll;
 }
 
 #main {
-	bottom: 0;
-        position: absolute;
-        top: 44px;
-        left: 380px;
-        right: 0px;
+    -webkit-flex:  1 1 auto ;
+    -moz-flex:  1 1 auto ;
+    -ms-flex:  1 1 auto ;
+    -o-flex:  1 1 auto ;
+    flex: 1 1 auto ;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    -o-flex-direction: column;
+
 }
+
+
 #map {
-    position: absolute;  
-    width: 100%;
-    top : 0;
-
+    -webkit-flex:  1 1 auto ;
+    -moz-flex:  1 1 auto ;
+    -ms-flex:  1 1 auto ;
+    -o-flex:  1 1 auto ;
+    flex: 1 0 auto ;
 }
-
 .close {
     position: absolute;
     right: 10px;
@@ -59,9 +107,9 @@ td.name div {
 
 tr {
     cursor: pointer;
-    
-}
 
+}
+/*
 .map-with-none {
     bottom: 0;
 }
@@ -72,35 +120,29 @@ tr {
 .map-with-elevation {
     bottom: 200px;
 }
+*/
 
-.text-warning {
-  color: #c09853;
-}
-
-.text-error {
-  color: #b94a48;
-}
-
-.text-info {
-  color: #3a87ad;
-}
-
-.text-success {
-  color: #468847;
-}
 
 #elevation-box {
+    position: relative;
     width: 100%;
     height: 200px;
-    bottom: 0;
-    position: absolute;
+    -webkit-flex:  0 0 200px ;
+    -moz-flex:  0 0 200px ;
+    -ms-flex:  0 0 200px ;
+    -o-flex:  0 0 200px ;
+    flex: 0 0 200px ;
+
 }
 
 #panorama-box {
     width: 100%;
     height: 300px;
-    position: absolute;
-    bottom: 0;
+-webkit-flex:  0 0 300px ;
+-moz-flex:  0 0 300px ;
+-ms-flex:  0 0 300px ;
+-o-flex:  0 0 300px ;
+flex: 0 0 300px ;
 }
 
 #panorama, #elevation-box > div{
@@ -120,11 +162,7 @@ tr {
 }
 
 .table-wrapper {
-    position: absolute;
-    bottom : 10px;
-    top : 300px;
-    overflow: scroll;
-    padding-right: 16px;
+    margin-bottom: 20px;
 }
 
 .table-wrapper button {
@@ -134,7 +172,6 @@ tr {
 .table-wrapper table {
     width: 100%;
 }
-
 .modal textarea {
     width: 100%;
     height: 100px;
