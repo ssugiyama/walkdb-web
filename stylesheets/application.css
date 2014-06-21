@@ -109,19 +109,6 @@ tr {
     cursor: pointer;
 
 }
-/*
-.map-with-none {
-    bottom: 0;
-}
-.map-with-panorama {
-    bottom: 300px;
-}
-
-.map-with-elevation {
-    bottom: 200px;
-}
-*/
-
 
 #elevation-box {
     position: relative;
@@ -138,11 +125,11 @@ tr {
 #panorama-box {
     width: 100%;
     height: 300px;
--webkit-flex:  0 0 300px ;
--moz-flex:  0 0 300px ;
--ms-flex:  0 0 300px ;
--o-flex:  0 0 300px ;
-flex: 0 0 300px ;
+    -webkit-flex:  0 0 300px ;
+    -moz-flex:  0 0 300px ;
+    -ms-flex:  0 0 300px ;
+    -o-flex:  0 0 300px ;
+    flex: 0 0 300px ;
 }
 
 #panorama, #elevation-box > div{

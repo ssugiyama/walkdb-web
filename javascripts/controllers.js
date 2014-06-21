@@ -28,15 +28,15 @@
                 });
 
                 google.maps.event.addListener(self.map, 'click', function (event) {
-                    if(scope.searchForm.type == 'neighbor'){
+                    if(scope.searchForm.filter == 'circle'){
                         self.distanceWidget.setCenter(event.latLng);
                     }
-                    else if(scope.searchForm.type == 'areas') {
+                    else if(scope.searchForm.filter == 'cities') {
                         $.ajax({
-                            url: '/add_area',
+                            url: '/add_city',
                             data: "latitude=" + event.latLng.lat() + "&longitude=" + event.latLng.lng(),
                             success : function (data) {
-                                self.addArea(data.jcode, data.the_geom);
+                                self.addCity(data.jcode, data.the_geom);
                             },
                         });
                     }
@@ -49,7 +49,7 @@
                     self.storeCenterAndZoom();
                 });
 
-                self.areas = {};
+                self.cities = {};
                 self.pathManager = new PathManager({map: self.map});
                 google.maps.event.addListener(self.pathManager, 'editable_changed', function () {
                     scope.editable = self.pathManager.get('editable');
@@ -164,9 +164,9 @@
                 }
             };
 
-            this.showAreas = function (show) {
-                for (var id in this.areas) {
-                    var pg = self.areas[id];
+            this.showCities = function (show) {
+                for (var id in this.cities) {
+                    var pg = self.cities[id];
                     pg.setMap(show?self.map:null);
                 }
             };
@@ -186,8 +186,8 @@
                     this.map.setZoom(array[2]);
                 }
             };
-            this.addArea = function (id, str) {
-                if (this.areas[id]) return;
+            this.addCity = function (id, str) {
+                if (this.cities[id]) return;
                 //        var pg = Walkrr.wkt2GMap(str);
                 var paths = str.split(" ").map(function (element, index, array){
                     return google.maps.geometry.encoding.decodePath(element);
@@ -196,12 +196,12 @@
                 pg.setPaths(paths);
                 pg.setOptions(this.areaStyle);
                 pg.setMap(this.map);
-                this.areas[id] = pg;
+                this.cities[id] = pg;
                 var self = this;
                 google.maps.event.addListener(pg, 'click',  function () {
                     pg.setMap(null);
                     pg = null;
-                    delete self.areas[id];
+                    delete self.cities[id];
                 });
             };
 
@@ -333,7 +333,11 @@
 
         };
     });
-
+    module.directive('myAdmin', function (walkService){
+        return function (scope, elm, attrs) {
+            walkService.admin = elm;
+        };
+    });
     global.WalkController = function ($scope, $http, $cookies, walkService) {
         var self = this;
 
@@ -372,13 +376,21 @@
             themes.push(name);
             self.themeInfo[name]  = '//netdna.bootstrapcdn.com/bootswatch/3.1.1/' + name + '/bootstrap.min.css';
         });
+        $scope.month = '';
+        $scope.year = '';
+        $scope.years = [];
+        var currentYear = (new Date()).getFullYear();
+        for (var y = currentYear; y >= 1997; y--) {
+            $scope.years.push(y);
+        }
         $scope.themes = themes;
         $scope.themeUri =  self.themeInfo[$cookies.currentTheme || 'default'];
         $scope.currentService = 'none';
         $scope.searchForm = {};
-        $scope.searchForm.type = 'all';
+        $scope.searchForm.filter = 'any';
         $scope.searchForm.order = "newest_first";
         $scope.searchForm.limit = 20;
+
         // dirty hack
         setTimeout(function () {
             google.maps.event.trigger(walkService.map, 'resize');
@@ -388,24 +400,25 @@
             $cookies.currentTheme = name;
         };
         $scope.search = function () {
-            if ($scope.searchForm.type == 'neighbor') {
+            if ($scope.searchForm.filter == 'circle') {
                 $scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();
                 $scope.searchForm.longitude = walkService.distanceWidget.getCenter().lng();
-                $scope.searchForm.radius = walkService.distanceWidget.getRadius();
+                $scope.searchForm
+.radius = walkService.distanceWidget.getRadius();
             }
             else {
                 $scope.searchForm.latitude = "";
                 $scope.searchForm.longitude = "";
                 $scope.searchForm.radius = "";
             }
-            if ($scope.searchForm.type == 'areas') {
-                $scope.searchForm.areas = Object.keys(walkService.areas).join(",");
+            if ($scope.searchForm.filter == 'cities') {
+                $scope.searchForm.cities = Object.keys(walkService.cities).join(",");
             }
             else {
-                $scope.searchForm.areas = "";
+                $scope.searchForm.cities = "";
             }
 
-            if ($scope.searchForm.type == 'similar') {
+            if ($scope.searchForm.filter == 'hausdorff' || $scope.searchForm.filter == 'crossing') {
                 $scope.searchForm.searchPath = walkService.pathManager.getEncodedSelection();
             }
             else {
@@ -428,11 +441,14 @@
             $scope.path_json = walkService.pathManager.selectionAsGeoJSON();
             $(walkService.modal).modal('show');
         };
-        $scope.resetAreas = function () {
-            Object.keys(walkService.areas).forEach(function (id) {
-                walkService.areas[id].setMap(null);
+        $scope.showAdmin = function () {
+            $(walkService.admin).modal('show');
+        };
+        $scope.resetCities = function () {
+            Object.keys(walkService.cities).forEach(function (id) {
+                walkService.cities[id].setMap(null);
             });
-            walkService.areas = {};
+            walkService.cities = {};
         };
         $scope.setRadius = function (r) {
             walkService.distanceWidget.setRadius(r);
@@ -505,6 +521,7 @@
             if ($scope.selection.id && confirm('Are you shure to delete?')) {
                 $http.get('/destroy/' + $scope.selection.id).success(function (data) {
                     $scope.selection = {};
+                    $(walkService.admin).modal('hide');
                 }).error(function (data) {
                     alert(data);
                 });
@@ -512,12 +529,13 @@
         };
         $scope.save = function () {
             if ($scope.selection.id && ! confirm('Are you shure to overwrite?')) {
-                rerurn;
+                return;
             }
             $scope.selection.path = walkService.pathManager.getEncodedSelection();
             $http.post('/save', $scope.selection).success(function (data) {
                 $scope.selection = data;
                 alert('saved successfully!');
+                $(walkService.admin).modal('hide');
             }).error(function (data) {
                 alert(data);
             });
@@ -541,10 +559,10 @@
         $scope.closeService = function () {
             $scope.currentService = 'none';
         }
-        $scope.$watch('searchForm.type', function (newValue, prevValue) {
-            walkService.showDistanceWidget(newValue == 'neighbor');
-            walkService.showAreas(newValue == 'areas');
-            if (newValue != 'neighbor' && newValue != 'similar' &&
+        $scope.$watch('searchForm.filter', function (newValue, prevValue) {
+            walkService.showDistanceWidget(newValue == 'circle');
+            walkService.showCities(newValue == 'cities');
+            if (newValue != 'circle' && newValue != 'hausdorff' &&
             $scope.searchForm.order == 'nearest_first')
             $scope.searchForm.order = 'newest_first';
         });
