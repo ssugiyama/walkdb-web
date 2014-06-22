@@ -85,7 +85,7 @@ body {
     -moz-flex-direction: column;
     -ms-flex-direction: column;
     -o-flex-direction: column;
-
+    flex-direction: column;
 }
 
 
@@ -94,7 +94,7 @@ body {
     -moz-flex:  1 1 auto ;
     -ms-flex:  1 1 auto ;
     -o-flex:  1 1 auto ;
-    flex: 1 0 auto ;
+    flex: 1 1 auto ;
 }
 .close {
     position: absolute;
