@@ -79,7 +79,7 @@
                 });
 
                 self.elevator = new google.maps.ElevationService();
-                self.serviceMarker = new google.maps.Marker({icon : 'http://maps.google.co.jp/mapfiles/ms/icons/yellow.png'});
+                self.infoWindow = new google.maps.InfoWindow();
 
                 self.streetViewService = new google.maps.StreetViewService();
                 self.panoramaIndex = 0;
@@ -102,7 +102,6 @@
                 reader.readAsText(file);
             };
             this.importJSON = function (json) {
-                console.log('json', json);
                 var obj = JSON.parse(json);
                 var coordinates = obj.coordinates;
                 var pts = coordinates.map(function (item) {
@@ -133,15 +132,10 @@
 
             this.plotElevation = function (results, status) {
                 if (status == google.maps.ElevationStatus.OK) {
-                    var elevations = results;
-                    var elevationPath = [];
-                    for (var i = 0; i < results.length; i++) {
-                        elevationPath.push(elevations[i].location);
-                    }
-                    this.elevationPath = elevationPath;
+                    this.elevations = results;
                     var data = [];
                     for (var i = 0; i < results.length; i++) {
-                        data.push([i, elevations[i].elevation]);
+                        data.push([i, this.elevations[i].elevation]);
                     }
                     // Draw the chart using the data within its DIV.
                     //		    $(this.elevationBox).dialog('open');
@@ -149,7 +143,10 @@
                     $.plot($(this.elevation), [data], {
                         xaxis : {show: false},
                         colors : ['#ff0000'],
-                        grid : { hoverable : true },
+                        grid : {
+                            hoverable : true,
+                            backgroundColor: 'white'
+                        },
                     });
 
                 }
@@ -292,14 +289,17 @@
         return function (scope, elm, attrs) {
             walkService.elevation = elm;
             $(elm).on("plothover", function (event, pos, item) {
-                var point = walkService.elevationPath[~~pos.x];
-                if (!point) return;
-                walkService.serviceMarker.setMap(walkService.map);
-                walkService.serviceMarker.setPosition(point);
-                walkService.map.setCenter(point);
+                var elevation = walkService.elevations[~~pos.x];
+                if (!elevation) return;
+
+                walkService.infoWindow.open(walkService.map);
+                walkService.infoWindow.setPosition(elevation.location);
+                var y = Math.round(elevation.elevation);
+                walkService.infoWindow.setContent(y + 'm');
+                walkService.map.setCenter(elevation.location);
             });
             $(elm).on("mouseout", function () {
-                walkService.serviceMarker.setMap(null);
+                walkService.infoWindow.close();
             });
         };
     });
@@ -312,13 +312,11 @@
             });
             var reader = new FileReader();
             reader.addEventListener('loadend', function(e) {
-                console.log(e.target.result);
                 scope.path_json = e.target.result;
                 setTimeout(function () {scope.$digest();}, 0);
             });
 
             textarea.bind("drop", function (e) {
-                console.log('kita')
                 e.stopPropagation();
                 e.preventDefault();
                 var files = e.originalEvent.dataTransfer.files;
