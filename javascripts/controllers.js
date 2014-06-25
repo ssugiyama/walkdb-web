@@ -336,7 +336,16 @@
             walkService.admin = elm;
         };
     });
-    global.WalkController = function ($scope, $http, $cookies, walkService) {
+    module.directive('myInfo', function (walkService){
+        return function (scope, elm, attrs) {
+            var input = $(elm).find('input[type="text"]');
+            input.on('click', function () {
+                this.select();
+            });
+            walkService.info = elm;
+        };
+    });
+    global.WalkController = function ($scope, $http, $cookies, $filter, walkService) {
         var self = this;
 
         //	$scope.selectionLength = 0;
@@ -395,12 +404,15 @@
         }, 1000);
         $scope.setTheme = function (name) {
             $scope.themeUri = self.themeInfo[name];
-            $cookies.currentTheme = name;
+
+    $cook
+ies.currentTheme = name;
         };
         $scope.search = function () {
             if ($scope.searchForm.filter == 'circle') {
                 $scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();
-                $scope.searchForm.longitude = walkService.distanceWidget.getCenter().lng();
+                $scope.searchForm.longitude = walkService.distanceWidget.getCe
+nter().lng();
                 $scope.searchForm
 .radius = walkService.distanceWidget.getRadius();
             }
@@ -441,6 +453,20 @@
         };
         $scope.showAdmin = function () {
             $(walkService.admin).modal('show');
+        };
+        $scope.showInfo = function (item, ev) {
+            ev.stopImmediatePropagation();
+            $scope.info_title = item.date + ': ' + item.start + ' - ' + item.end + ' (' + $filter('number')(item.length, 1) + 'km)';
+            $scope.info_uri   = location.protocol + "//" + location.host + "?id=" + item.id;
+            $scope.twitter_params = 'text=' + encodeURIComponent($scope.info_title) + '&url=' + encodeURIComponent($scope.info_uri);
+            var elm = angular.element('<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en"  data-count="none" data-size="large">Tweet</a>');
+            elm.attr('data-hashtags', $('#twitter_div').attr('data-hashtags'));
+            elm.attr('data-text', $scope.info_title);
+            elm.attr('data-url', $scope.info_uri);
+            $('#twitter_div').html(elm);
+            console.log($('#twitter_div').html());
+            twttr.widgets.load();
+            $(walkService.info).modal('show');
         };
         $scope.resetCities = function () {
             Object.keys(walkService.cities).forEach(function (id) {
@@ -604,16 +630,7 @@
             ev.stopImmediatePropagation();
             return true;
         };
-        $scope.twitter_url = function (item, hashtags) {
-            var params = {
-                url : location.protocol + "//" + location.host + "?id=" + item.id,
-                text: item.date + ' : ' + item.start + ' - ' + item.end + ' (' + Math.round(item.length*10)/10 + 'km)',
-                hashtags : hashtags
-            };
-            return 'https://twitter.com/share?' +  Object.keys(params).map(function (key) {
-                return key + '=' + encodeURIComponent(params[key]);
-            }).join('&');
-        };
+
         $(document).bind("drop", function (e) {
             e.stopPropagation();
             e.preventDefault();
