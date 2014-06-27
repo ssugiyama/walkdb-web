@@ -404,17 +404,13 @@
         }, 1000);
         $scope.setTheme = function (name) {
             $scope.themeUri = self.themeInfo[name];
-
-    $cook
-ies.currentTheme = name;
+            $cookies.currentTheme = name;
         };
         $scope.search = function () {
             if ($scope.searchForm.filter == 'circle') {
                 $scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();
-                $scope.searchForm.longitude = walkService.distanceWidget.getCe
-nter().lng();
-                $scope.searchForm
-.radius = walkService.distanceWidget.getRadius();
+                $scope.searchForm.longitude = walkService.distanceWidget.getCenter().lng();
+                $scope.searchForm.radius = walkService.distanceWidget.getRadius();
             }
             else {
                 $scope.searchForm.latitude = "";
