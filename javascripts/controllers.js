@@ -1,7 +1,7 @@
 (function (global) {
     'use strict';
 
-    var module = angular.module('walkApp', ['ngCookies']);
+    var module = angular.module('walkApp', []);
     module.factory('walkService', function () {
         var service = function () {
             var self = this;
@@ -345,7 +345,7 @@
             walkService.info = elm;
         };
     });
-    global.WalkController = function ($scope, $http, $cookies, $filter, walkService) {
+    global.WalkController = function ($scope, $http, $filter, walkService) {
         var self = this;
 
         //	$scope.selectionLength = 0;
@@ -391,7 +391,7 @@
             $scope.years.push(y);
         }
         $scope.themes = themes;
-        $scope.themeUri =  self.themeInfo[$cookies.currentTheme || 'default'];
+        $scope.themeUri =  self.themeInfo[localStorage['currentTheme'] || 'default'];
         $scope.currentService = 'none';
         $scope.searchForm = {};
         $scope.searchForm.filter = 'any';
@@ -404,7 +404,7 @@
         }, 1000);
         $scope.setTheme = function (name) {
             $scope.themeUri = self.themeInfo[name];
-            $cookies.currentTheme = name;
+            localStorage['currentTheme'] = name;
         };
         $scope.search = function () {
             if ($scope.searchForm.filter == 'circle') {
