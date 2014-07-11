@@ -447,7 +447,19 @@
             $scope.path_json = walkService.pathManager.selectionAsGeoJSON();
             $(walkService.modal).modal('show');
         };
-        $scope.showAdmin = function () {
+        $scope.showAdmin = function (item, ev) {
+	    if (ev) ev.stopImmediatePropagation();
+
+	    if ( !walkService.pathManager.selection ) {
+		alert('drow or select a path on map');
+		return;
+	    }
+	    if (item) {
+                $scope.selection = item;		
+	    }
+	    else {
+		$scope.selection = {};		
+	    }
             $(walkService.admin).modal('show');
         };
         $scope.showInfo = function (item, ev) {
@@ -478,7 +490,6 @@
 
             $http.get('/show/' + id).success(function (data) {
                 if (data.length > 0) {
-                    $scope.selection = data[0];
                     walkService.pathManager.showPath(data[0].path, true);
                 }
             }).error(function (data) {

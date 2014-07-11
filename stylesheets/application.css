@@ -5,7 +5,7 @@
 #map img { max-width: none; }
 #elevation-box img { max-width: none; }
 #panorama-box img {max-width: none; }
-td.date {
+td.date, td.actions {
     white-space: nowrap;
 }
 td.way {
@@ -13,7 +13,7 @@ td.way {
     text-align: right;
 }
 td.name div {
-    width: 85px;
+    width: 75px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
