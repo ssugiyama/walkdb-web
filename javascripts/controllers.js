@@ -368,7 +368,11 @@
                 $scope.result[item.id] = false;
             });
         }
-
+        $http.get('/cvarsion').success(function(data) {
+            Object.keys(data).forEach(function (key) {
+                $scope[key] = data[key];
+            }
+        });
 
         if (location.search) {
             $http.get('/search' + location.search).success(function (data) {
