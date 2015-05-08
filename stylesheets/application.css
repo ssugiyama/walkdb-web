@@ -71,6 +71,8 @@ body {
     -o-flex:  0 0 400px ;
     flex: 0 0 400px ;
     overflow: scroll;
+    padding-bottom: 16px;
+    padding-top: 16px;
 }
 
 #main {
@@ -149,10 +151,6 @@ tr {
 #pagination {
     position: absolute;
     bottom : 0;
-}
-
-.table-wrapper {
-    margin-bottom: 20px;
 }
 
 .table-wrapper button {
