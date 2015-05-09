@@ -296,7 +296,7 @@
                 walkService.infoWindow.setPosition(elevation.location);
                 var y = Math.round(elevation.elevation);
                 walkService.infoWindow.setContent(y + 'm');
-                walkService.map.setCenter(elevation.location);
+//                walkService.map.setCenter(elevation.location);
             });
             $(elm).on("mouseout", function () {
                 walkService.infoWindow.close();
