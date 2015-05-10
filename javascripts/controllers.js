@@ -454,15 +454,18 @@
         $scope.showAdmin = function (item, ev) {
 	    if (ev) ev.stopImmediatePropagation();
 
-	    if ( !walkService.pathManager.selection ) {
-		alert('drow or select a path on map');
+	    if ( !item && !walkService.pathManager.selection ) {
+		alert('draw or select a path on map');
 		return;
 	    }
 	    if (item) {
-                $scope.selection = item;		
+                $scope.selection = angular.copy(item);		
+                $scope.update_path = false;
+                $scope.update_path_disabled = !walkService.pathManager.selection;
 	    }
 	    else {
 		$scope.selection = {};		
+                $scope.update_path = true;
 	    }
             $(walkService.admin).modal('show');
         };
@@ -566,7 +569,7 @@
             if ($scope.selection.id && ! confirm('Are you shure to overwrite?')) {
                 return;
             }
-            $scope.selection.path = walkService.pathManager.getEncodedSelection();
+            $scope.selection.path = $scope.update_path ? walkService.pathManager.getEncodedSelection() : null;
             $http.post('/save', $scope.selection).success(function (data) {
                 $scope.selection = data;
                 alert('saved successfully!');
