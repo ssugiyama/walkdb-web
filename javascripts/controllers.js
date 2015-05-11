@@ -471,7 +471,7 @@
         };
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
-            $scope.info_title = item.date + ': ' + item.start + ' - ' + item.end + ' (' + $filter('number')(item.length, 1) + 'km)';
+            $scope.info_title = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
             $scope.info_uri   = location.protocol + "//" + location.host + "?id=" + item.id;
             $scope.twitter_params = 'text=' + encodeURIComponent($scope.info_title) + '&url=' + encodeURIComponent($scope.info_uri);
             var elm = angular.element('<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en"  data-count="none" data-size="large">Tweet</a>');

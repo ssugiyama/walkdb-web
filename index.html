@@ -170,7 +170,7 @@
                         <tr ng-repeat="item in walks" ng-click="showPath(item.id)">
                             <td>{{ $index + 1 }}</td>
                             <td class="date">{{item.date}}</td>
-                            <td class="name"><div>{{item.start}}</div></td><td class="name"><div>{{item.end}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
+                            <td class="name"><div>{{item.title}}</div></td><td class="name"><div>{{item.comment}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
                             <td class="actions">
                                 <a href="#" class="glyphicon glyphicon-info-sign" ng-click="showInfo(item, $event)"></a>
                                 <a href="#" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>
@@ -237,15 +237,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-xs-3" for="start">start</label>
+                            <label class="control-label col-xs-3" for="title">title</label>
                             <div class="col-xs-9">
-                                <input type="text" name="start" ng-model="selection.start" class="form-control" />
+                                <input type="text" name="title" ng-model="selection.title" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-xs-3" for="end">end</label>
+                            <label class="control-label col-xs-3" for="comment">comment</label>
                             <div class="col-xs-9">
-                                <input type="text" name="end" ng-model="selection.end" class="form-control" />
+                                <input type="text" name="comment" ng-model="selection.comment" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group" ng-show="selection.id">
