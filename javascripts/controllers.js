@@ -338,7 +338,7 @@
     });
     module.directive('myInfo', function (walkService){
         return function (scope, elm, attrs) {
-            var input = $(elm).find('input[type="text"]');
+            var input = $(elm).find('textarea,input');
             input.on('click', function () {
                 this.select();
             });
@@ -347,7 +347,6 @@
     });
     global.WalkController = function ($scope, $http, $filter, walkService) {
         var self = this;
-
         //	$scope.selectionLength = 0;
 
         function searchCallback (data, show, append) {
@@ -471,13 +470,21 @@
         };
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
-            $scope.info_title = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
-            $scope.info_uri   = location.protocol + "//" + location.host + "?id=" + item.id;
+            $scope.info_comment = item.comment;
+            var href = location.protocol + "//" + location.host + "?id=" + item.id;
+            var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
+            var link = angular.element('<a></a>');
+            link.attr('href', href);
+            link.attr('target', '_blank');
+            link.text(body);
+            if (item.comment) link.attr('title', item.comment);
+            $scope.info_link = link.get(0).outerHTML;
+            $scope.info_url  = href;
             $scope.twitter_params = 'text=' + encodeURIComponent($scope.info_title) + '&url=' + encodeURIComponent($scope.info_uri);
             var elm = angular.element('<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en"  data-count="none" data-size="large">Tweet</a>');
             elm.attr('data-hashtags', $('#twitter_div').attr('data-hashtags'));
-            elm.attr('data-text', $scope.info_title);
-            elm.attr('data-url', $scope.info_uri);
+            elm.attr('data-text', body);
+            elm.attr('data-url', href);
             $('#twitter_div').html(elm);
             console.log($('#twitter_div').html());
             twttr.widgets.load();
@@ -571,9 +578,13 @@
             }
             $scope.selection.path = $scope.update_path ? walkService.pathManager.getEncodedSelection() : null;
             $http.post('/save', $scope.selection).success(function (data) {
-                $scope.selection = data;
-                alert('saved successfully!');
+                $scope.selection = data[0];
+                // fix date format after saving
+                data[0].date = $filter('date')(data[0].date, 'yyyy-MM-dd');
                 $(walkService.admin).modal('hide');
+                $scope.walks = data;
+                $scope.total_count = null;
+                $scope.params = null;
             }).error(function (data) {
                 alert(data);
             });

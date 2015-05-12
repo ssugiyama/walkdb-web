@@ -156,6 +156,7 @@
             </form>
             <p id="message" class="well well-sm col-xs-12" ng-show="walks != null">
                 <strong ng-switch on="total_count">
+                    <span ng-switch-when="null">successfully saved</span>
                     <span ng-switch-when="0">No results</span>
                     <span ng-switch-when="1">1 / 1 item</span>
                     <span ng-switch-default>{{ walks.length }} / {{ total_count }} items</span>
@@ -167,10 +168,10 @@
             <div class="table-wrapper col-xs-12">
                 <table class="table table-condensed table-striped table-hover">
                     <tbody id="tbody">
-                        <tr ng-repeat="item in walks" ng-click="showPath(item.id)">
+                        <tr ng-repeat="item in walks" ng-click="showPath(item.id)" title="{{ item.comment }}">
                             <td>{{ $index + 1 }}</td>
                             <td class="date">{{item.date}}</td>
-                            <td class="name"><div>{{item.title}}</div></td><td class="name"><div>{{item.comment}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
+                            <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
                             <td class="actions">
                                 <a href="#" class="glyphicon glyphicon-info-sign" ng-click="showInfo(item, $event)"></a>
                                 <a href="#" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>
@@ -245,7 +246,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3" for="comment">comment</label>
                             <div class="col-xs-9">
-                                <input type="text" name="comment" ng-model="selection.comment" class="form-control" />
+                                <textarea name="comment" ng-model="selection.comment" class="form-control" ></textarea>
                             </div>
                         </div>
                         <div class="form-group" ng-show="selection.id">
@@ -272,15 +273,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label col-xs-2">title</label>
+                        <label class="control-label col-xs-2">url</label>
                         <div class="col-xs-10">
-                            <input type="text" readonly="readonly" ng-model="info_title" class="form-control" />
+                            <input type="text" readonly="readonly" ng-model="info_url" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-xs-2">uri</label>
+                        <label class="control-label col-xs-2">link</label>
                         <div class="col-xs-10">
-                            <input type="text" readonly="readonly" ng-model="info_uri" class="form-control" />
+                            <textarea readonly="readonly" ng-model="info_link" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">comment</label>
+                        <div class="col-xs-10">
+                            <textarea readonly="readonly" ng-model="info_comment" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>
