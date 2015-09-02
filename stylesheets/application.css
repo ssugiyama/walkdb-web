@@ -59,7 +59,7 @@ body {
     -ms-flex:  1 1 auto ;
     -o-flex:  1 1 auto ;
     flex: 1 1 auto ;
-    overflow-y: -moz-hidden-unscrollable;
+    overflow-y: hidden;
 }
 
 

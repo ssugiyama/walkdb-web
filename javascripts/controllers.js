@@ -345,7 +345,7 @@
             walkService.info = elm;
         };
     });
-    global.WalkController = function ($scope, $http, $filter, walkService) {
+    module.controller("WalkController",  function ($scope, $http, $filter, walkService) {
         var self = this;
         //	$scope.selectionLength = 0;
 
@@ -667,8 +667,6 @@
             e.preventDefault();
         });
 
-    }
-
-
+    });
 
 })(this);
