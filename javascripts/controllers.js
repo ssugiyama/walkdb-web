@@ -378,13 +378,14 @@
                 searchCallback(data, true);
             });
         }
-
-        self.themeInfo = {default : '//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'};
-        var themes = ['default'];
-        var bootsWatchThemes = ['amelia', 'cerulean', 'cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'lumen', 'readable', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
-        bootsWatchThemes.forEach(function (name){
-            themes.push(name);
-            self.themeInfo[name]  = '//netdna.bootstrapcdn.com/bootswatch/3.1.1/' + name + '/bootstrap.min.css';
+        $http.get('http://api.bootswatch.com/3/').success(function (data) {
+            var themeInfo =  {Default : $('#theme-link').data('default-href')};
+            data.themes.forEach(function (item) {
+                themeInfo[item.name] = item.cssCdn;
+            });
+            self.themeInfo = themeInfo;
+            $scope.themes = Object.keys(themeInfo);
+            $scope.themeUri =  self.themeInfo[localStorage['currentTheme'] || 'Default'];
         });
         $scope.month = '';
         $scope.year = '';
@@ -393,8 +394,6 @@
         for (var y = currentYear; y >= 1997; y--) {
             $scope.years.push(y);
         }
-        $scope.themes = themes;
-        $scope.themeUri =  self.themeInfo[localStorage['currentTheme'] || 'default'];
         $scope.currentService = 'none';
         $scope.searchForm = {};
         $scope.searchForm.filter = 'any';
