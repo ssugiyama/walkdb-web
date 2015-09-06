@@ -28,7 +28,7 @@
                 });
 
                 google.maps.event.addListener(self.map, 'click', function (event) {
-                    if(scope.searchForm.filter == 'circle'){
+                    if(scope.searchForm.filter == 'neighborhood'){
                         self.distanceWidget.setCenter(event.latLng);
                     }
                     else if(scope.searchForm.filter == 'cities') {
@@ -430,7 +430,7 @@
             return self.themeInfo[name].title;
         };
         $scope.search = function () {
-            if ($scope.searchForm.filter == 'circle') {
+            if ($scope.searchForm.filter == 'neighborhood') {
                 $scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();
                 $scope.searchForm.longitude = walkService.distanceWidget.getCenter().lng();
                 $scope.searchForm.radius = walkService.distanceWidget.getRadius();
@@ -629,9 +629,9 @@
             $scope.currentService = 'none';
         }
         $scope.$watch('searchForm.filter', function (newValue, prevValue) {
-            walkService.showDistanceWidget(newValue == 'circle');
+            walkService.showDistanceWidget(newValue == 'neighborhood');
             walkService.showCities(newValue == 'cities');
-            if (newValue != 'circle' && newValue != 'hausdorff' &&
+            if (newValue != 'neighborhood' && newValue != 'hausdorff' &&
             $scope.searchForm.order == 'nearest_first')
             $scope.searchForm.order = 'newest_first';
         });

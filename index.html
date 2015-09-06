@@ -43,9 +43,9 @@
                     <li><a ng-click="resetCities()"  href="#">reset</a></li>
                 </ul>
             </li>
-            <li class="dropdown" ng-show="searchForm.filter == 'circle'">
+            <li class="dropdown" ng-show="searchForm.filter == 'neighborhood'">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Circle
+                    Neighborhood
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
@@ -101,7 +101,7 @@
                     <div class="col-xs-9">
                         <select ng-model="searchForm.filter" class="form-control">
                             <option value="any">Any</option>
-                            <option value="circle">Circle</option>
+                            <option value="neighborhood">Neighborhood</option>
                             <option value="cities">Cities</option>
                             <option value="hausdorff">Hausdorff</option>
                             <option value="crossing">Crossing</option>
@@ -147,7 +147,7 @@
                             <option value="westernmost_first">westernmost first</option>
                             <option value="southernmost_first">southernmost first</option>
                             <option value="northernmost_first">northernmost first</option>
-                            <option value="nearest_first" ng-if="searchForm.filter == 'circle' || searchForm.filter == 'hausdorff'">nearest first</option>
+                            <option value="nearest_first" ng-if="searchForm.filter == 'neighborhood' || searchForm.filter == 'hausdorff'">nearest first</option>
                         </select>
                     </div>
                     <label class="control-label col-xs-2" for="limit">limit</label>
