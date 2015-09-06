@@ -72,7 +72,7 @@
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    <li ng-repeat="th in themes"><a ng-click="$parent.setTheme(th);"  href="#">{{th}}</a></li>
+                    <li ng-repeat="th in themes"><a ng-click="$parent.setTheme(th);" href="#" title="{{$parent.getThemeTitle(th)}}">{{th}}</a></li>
                 </ul>
             </li>
         </ul>

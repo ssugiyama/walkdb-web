@@ -379,13 +379,21 @@
             });
         }
         $http.get('http://api.bootswatch.com/3/').success(function (data) {
-            var themeInfo =  {Default : $('#theme-link').data('default-href')};
+	    var themeInfo = {
+		Default : {
+		    uri: $('#theme-link').data('default-href'),
+		    title: 'bootstrap default theme'
+		}
+	    };
             data.themes.forEach(function (item) {
-                themeInfo[item.name] = item.cssCdn;
+                themeInfo[item.name] = {
+		    uri: item.cssCdn,
+		    title: item.description
+		};
             });
             self.themeInfo = themeInfo;
             $scope.themes = Object.keys(themeInfo);
-            $scope.themeUri =  self.themeInfo[localStorage['currentTheme'] || 'Default'];
+            $scope.setTheme(localStorage['currentTheme'] || 'Default');
         });
         $scope.month = '';
         $scope.year = '';
@@ -405,8 +413,11 @@
             google.maps.event.trigger(walkService.map, 'resize');
         }, 1000);
         $scope.setTheme = function (name) {
-            $scope.themeUri = self.themeInfo[name];
+            $scope.themeUri = self.themeInfo[name].uri;
             localStorage['currentTheme'] = name;
+        };
+        $scope.getThemeTitle = function (name) {
+            return self.themeInfo[name].title;
         };
         $scope.search = function () {
             if ($scope.searchForm.filter == 'circle') {
