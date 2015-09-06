@@ -76,6 +76,14 @@
                 </ul>
             </li>
         </ul>
+        <form class="navbar-form navbar-left" role="search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Move to..." ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="geocoderSearch(address)">Go!</button>
+                </span>
+            </div><!-- /input-group -->
+        </form>
         <ul class="nav navbar-right">
             <li class="navbar-text">Length: <span id="length">{{selectionLength | number:2}}</span>km</li>
         </ul>

@@ -80,13 +80,12 @@
 
                 self.elevator = new google.maps.ElevationService();
                 self.infoWindow = new google.maps.InfoWindow();
-
+		self.geocoder = new google.maps.Geocoder();
                 self.streetViewService = new google.maps.StreetViewService();
                 self.panoramaIndex = 0;
                 self.panoramaInterval = 50;
 
                 self.loadCenterAndZoom();
-
             };
             this.importFile = function (file) {
                 var reader = new FileReader();
@@ -255,6 +254,16 @@
                 pph.push([pt2, h]);
                 return pph;
 
+            };
+            this.geocoderSearch = function(address) {
+                var self = this;
+                this.geocoder.geocode( { 'address': address}, function(results, status) {
+		    if (status == google.maps.GeocoderStatus.OK) {
+			self.map.setCenter(results[0].geometry.location);
+		    } else {
+			alert("Geocode was not successful for the following reason: " + status);
+		    }
+		});
             };
         };
 
@@ -665,7 +674,9 @@
             ev.stopImmediatePropagation();
             return true;
         };
-
+        $scope.geocoderSearch = function (address) {
+            walkService.geocoderSearch(address);
+        }
         $(document).bind("drop", function (e) {
             e.stopPropagation();
             e.preventDefault();
