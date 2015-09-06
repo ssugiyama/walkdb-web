@@ -422,6 +422,7 @@
             google.maps.event.trigger(walkService.map, 'resize');
         }, 1000);
         $scope.setTheme = function (name) {
+	    if ($scope.themes.indexOf(name) == -1) name = 'Default';
             $scope.themeUri = self.themeInfo[name].uri;
             localStorage['currentTheme'] = name;
         };
