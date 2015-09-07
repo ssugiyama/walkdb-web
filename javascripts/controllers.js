@@ -390,7 +390,7 @@
         $http.get('http://api.bootswatch.com/3/').success(function (data) {
 	    var themeInfo = {
 		Default : {
-		    uri: $('#theme-link').data('default-href'),
+		    uri:   null,
 		    title: 'bootstrap default theme'
 		}
 	    };
