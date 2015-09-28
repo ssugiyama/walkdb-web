@@ -1,0 +1,108 @@
+#main-box {
+    -webkit-flex:  1 1 auto ;
+    -moz-flex:  1 1 auto ;
+    -ms-flex:  1 1 auto ;
+    -o-flex:  1 1 auto ;
+    flex: 1 1 auto ;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    -o-flex-direction: column;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+#elevation-box {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    -webkit-flex:  0 0 200px ;
+    -moz-flex:  0 0 200px ;
+    -ms-flex:  0 0 200px ;
+    -o-flex:  0 0 200px ;
+    flex: 0 0 200px ;
+
+}
+
+#panorama-box {
+    width: 100%;
+    height: 300px;
+    -webkit-flex:  0 0 300px ;
+    -moz-flex:  0 0 300px ;
+    -ms-flex:  0 0 300px ;
+    -o-flex:  0 0 300px ;
+    flex: 0 0 300px ;
+}
+
+#panorama, #elevation-box > div{
+    width: 100%;
+    height: 100%;
+}
+#panorama_control {
+    position: absolute;
+    height: 40px;
+    bottom: 0;
+    z-index: 100;
+}
+#pagination {
+    position: absolute;
+    bottom : 0;
+}
+
+#map {
+    -webkit-flex:  1 1 auto ;
+    -moz-flex:  1 1 auto ;
+    -ms-flex:  1 1 auto ;
+    -o-flex:  1 1 auto ;
+    flex: 1 1 auto ;
+}
+
+#page-maps div.ui-content {
+        -webkit-flex:  1 1 auto ;
+    -moz-flex:  1 1 auto ;
+    -ms-flex:  1 1 auto ;
+    -o-flex:  1 1 auto ;
+    flex: 1 1 auto ;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    -o-flex-direction: column;
+    flex-direction: column;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    z-index: 100;
+    border-radius: 3px;
+    background-color: #222222;
+}
+
+td.date, td.actions {
+    white-space: nowrap;
+}
+td.way {
+    white-space: nowrap;
+    text-align: right;
+}
+td.name div {
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ui-panel-inner {
+    padding: 4px;
+}

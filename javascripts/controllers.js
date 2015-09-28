@@ -272,7 +272,7 @@
 
     module.directive('myMap', function (walkService){
         return function (scope, elm, attrs) {
-            walkService.initMap(scope, angular.element(elm)[0]);
+	    walkService.initMap(scope, angular.element(elm)[0]);
         };
     });
 
@@ -357,7 +357,19 @@
     module.controller("WalkController",  function ($scope, $http, $filter, walkService) {
         var self = this;
         //	$scope.selectionLength = 0;
-
+	if ($('html').data('mobile')){
+	    $scope.isMobile = true;
+	    $(function (){ 
+		resizeMap();
+	    });
+	    var resizeMap = function () {
+		$('#main-box').height($(window).height() - $("[data-role='header']").height());
+		google.maps.event.trigger(walkService.map, 'resize');
+	    };
+	    $("#page-maps").on('pageshow', resizeMap);
+	    $(window).on('orientationchange', resizeMap);	    
+	}
+	
         function searchCallback (data, show, append) {
             if (append) {
                 $scope.walks.push.apply($scope.walks, data.rows);
@@ -375,6 +387,9 @@
             data.rows.forEach(function (item, index, array) {
                 $scope.result[item.id] = false;
             });
+	    if ($scope.isMobile && data.rows.length > 0){
+		$("#panel-search form").collapsible("collapse");
+	    }
         }
         $http.get('/version').success(function(data) {
             Object.keys(data).forEach(function (key) {
@@ -453,11 +468,9 @@
             else {
                 $scope.searchForm.searchPath = "";
             }
-
             $http.get('/search?' + $.param($scope.searchForm)).success(function (data) {
                 searchCallback(data, false);
             });
-
         };
         $scope.getNext = function (params) {
             $http.get('/search?' + params).success(function (data)
@@ -478,6 +491,7 @@
 		return;
 	    }
 	    if (item) {
+console.log(item.date);
                 $scope.selection = angular.copy(item);		
                 $scope.update_path = false;
                 $scope.update_path_disabled = !walkService.pathManager.selection;
@@ -521,10 +535,14 @@
         }
 
         $scope.showPath = function (id) {
-
             $http.get('/show/' + id).success(function (data) {
                 if (data.length > 0) {
                     walkService.pathManager.showPath(data[0].path, true);
+		    if ($scope.isMobile) {
+			$scope.tooltip = data[0].date + ": " + data[0].title + " (" + (Math.round(data[0].length*10)/10) + "km)";
+			$("#panel-search").panel("close");
+			$("#tooltip").popup("open");
+		    }
                 }
             }).error(function (data) {
                 alert(data);
@@ -538,6 +556,9 @@
                 for (var i = 0; i < data.length; i++) {
                     walkService.pathManager.showPath(data[i].path, false);
                 }
+		if ($scope.isMobile) {
+		    $("#panel-search").panel("close");
+		}
             }).error(function (data) {
                 alert(data);
             });
@@ -617,23 +638,29 @@
             walkService.requestElevation();
         };
         $scope.showPanorama = function () {
-
             walkService.panorama.setVisible(true);
             walkService.showPanorama();
             $scope.currentService = 'panorama';
             $scope.panoramaIndex = walkService.panoramaIndex+1;
             $scope.panoramaCount = walkService.panoramaCount;
-
         };
         $scope.closeService = function () {
             $scope.currentService = 'none';
-        }
+        };
+
         $scope.$watch('searchForm.filter', function (newValue, prevValue) {
             walkService.showDistanceWidget(newValue == 'neighborhood');
             walkService.showCities(newValue == 'cities');
             if (newValue != 'neighborhood' && newValue != 'hausdorff' &&
-            $scope.searchForm.order == 'nearest_first')
-            $scope.searchForm.order = 'newest_first';
+		$scope.searchForm.order == 'nearest_first') {
+		$scope.searchForm.order = 'newest_first';
+	    }
+	    if (newValue != 'any' && $scope.isMobile) {
+		if ($scope.isMobile) {
+		    $("#panel-search").panel("close");
+		}
+	    }
+	    
         });
         $scope.$watch('editable', function (newValue, prevValue) {
             if (walkService.pathManager.get('editable') != newValue)
