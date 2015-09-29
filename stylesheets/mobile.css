@@ -106,3 +106,10 @@ td.name div {
 .ui-panel-inner {
     padding: 4px;
 }
+
+.ui-panel .ui-panel-inner {
+    overflow: auto;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;  
+    -webkit-overflow-scrolling: touch;
+}

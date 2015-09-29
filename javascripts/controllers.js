@@ -369,7 +369,16 @@
 	    $("#page-maps").on('pageshow', resizeMap);
 	    $(window).on('orientationchange', resizeMap);	    
 	}
-	
+	$(function () {
+	    if (location.search) {
+		$http.get('/search' + location.search).success(function (data) {
+                    searchCallback(data, true);
+		});
+            } else if ($scope.isMobile) {
+		$("#panel-search").panel("open");	    
+	    }
+	});
+
         function searchCallback (data, show, append) {
             if (append) {
                 $scope.walks.push.apply($scope.walks, data.rows);
@@ -381,12 +390,12 @@
             $scope.params = data.params;
             $scope.total_count = data.count;
 
-            if (show) {
-                walkService.pathManager.showPath(data.rows[0].path, true);
-            }
             data.rows.forEach(function (item, index, array) {
-                $scope.result[item.id] = false;
+                $scope.result[item.id] = item;
             });
+            if (show) {
+                $scope.showPath(data.rows[0].id);
+            }
 	    if ($scope.isMobile && data.rows.length > 0){
 		$("#panel-search form").collapsible("collapse");
 	    }
@@ -397,11 +406,6 @@
             });
         });
 
-        if (location.search) {
-            $http.get('/search' + location.search).success(function (data) {
-                searchCallback(data, true);
-            });
-        }
         $http.get('http://api.bootswatch.com/3/').success(function (data) {
 	    var themeInfo = {
 		Default : {
@@ -535,35 +539,32 @@ console.log(item.date);
         }
 
         $scope.showPath = function (id) {
-            $http.get('/show/' + id).success(function (data) {
-                if (data.length > 0) {
-                    walkService.pathManager.showPath(data[0].path, true);
-		    if ($scope.isMobile) {
-			$scope.tooltip = data[0].date + ": " + data[0].title + " (" + (Math.round(data[0].length*10)/10) + "km)";
-			$("#panel-search").panel("close");
+	    var data = $scope.result[id];
+            if (data) {
+                walkService.pathManager.showPath(data.path, true);
+		if ($scope.isMobile) {
+		    $scope.tooltip = data.date + ": " + data.title + " (" + (Math.round(data.length*10)/10) + "km)";
+		    $("#panel-search").panel("close");
+		    setTimeout(function () {
 			$("#tooltip").popup("open");
-		    }
-                }
-            }).error(function (data) {
-                alert(data);
-            });
+		    }, 1000);
+		    setTimeout(function () {
+			$("#tooltip").popup("close");
+		    }, 6000);
+		    
+		}
+            }
             return false;
 
         };
         $scope.showPaths = function () {
-            var ids =  Object.keys($scope.result);
-            $http.post('/show' , {id : ids}).success(function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    walkService.pathManager.showPath(data[i].path, false);
-                }
-		if ($scope.isMobile) {
-		    $("#panel-search").panel("close");
-		}
-            }).error(function (data) {
-                alert(data);
-            });
+            for (var id in $scope.result) {
+                walkService.pathManager.showPath($scope.result[id].path, false);
+            }
+	    if ($scope.isMobile) {
+		$("#panel-search").panel("close");
+	    }
             return false;
-
         };
 
         $scope.download = function (id, ev) {

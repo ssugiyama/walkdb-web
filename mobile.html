@@ -18,7 +18,7 @@
 
     <body>
 	<div data-role="page" id="page-maps" data-theme="a">
-	    <div data-role="panel" id="panel-search" data-theme="a">
+	    <div data-role="panel" id="panel-search" data-theme="a" >
 		<form data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-collapsed="false" class="ui-mini">
 		    <legend>search form</legend>
 		    <input type="hidden" name="latitude" value="{{searchForm.latitude}}" />
@@ -92,9 +92,6 @@
 		    </ul>
 		    <a href="#" class="ui-btn ui-mini ui-icon-carat-d ui-btn-icon-left" ng-show="params" ng-click="getNext(params)">more</a>
 		</div>
-		<div data-role="popup" id="tooltip">
-		    <p>{{ tooltip }}</p>
-		</div>
 	    </div>
 	    
             <div data-role="header">
@@ -126,6 +123,9 @@
 			<a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-r ui-btn-icon-notext" ng-click="forwardPanorama()"></a>
 			
                     </div>
+		</div>
+		<div data-role="popup" id="tooltip" data-transition="slide">
+		    <p>{{ tooltip }}</p>
 		</div>
 	    </div>
 	</div>
