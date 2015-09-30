@@ -367,7 +367,10 @@
 		google.maps.event.trigger(walkService.map, 'resize');
 	    };
 	    $("#page-maps").on('pageshow', resizeMap);
-	    $(window).on('orientationchange', resizeMap);	    
+	    $(window).on('orientationchange', resizeMap);
+	    $('.menu').on('click', function () {
+		$(this).popup('close');
+	    });
 	}
 	$(function () {
 	    if (location.search) {
@@ -550,7 +553,7 @@ console.log(item.date);
 		    }, 1000);
 		    setTimeout(function () {
 			$("#tooltip").popup("close");
-		    }, 6000);
+		    }, 4000);
 		    
 		}
             }

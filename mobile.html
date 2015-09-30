@@ -95,15 +95,24 @@
 	    </div>
 	    
             <div data-role="header">
-		<a href="#panel-search"  class="ui-btn ui-icon-search ui-btn-icon-notext"></a>
+		<a href="#panel-search"  class="ui-mini ui-btn ui-icon-search ui-btn-icon-notext"></a>
 		<h1>Nodewalk</h1>
-		<a href="#menu-service" data-rel="popup" class="ui-btn ui-icon-eye ui-btn-icon-notext"></a>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+		  <a href="#menu-edit" data-rel="popup" class="ui-btn ui-icon-edit ui-btn-icon-notext"></a>		  
+		  <a href="#menu-service" data-rel="popup" class="ui-btn ui-icon-eye ui-btn-icon-notext"></a>
+                </div>
 	    </div>
-	    <div data-role="popup" id="menu-service">
+	    <div data-role="popup" id="menu-service" class="menu" >
 		<ul data-role="listview" data-inset="true">
 	            <li data-icon="false"><a href="#" ng-click="showElevation()" >elevation</a></li>
                     <li data-icon="false"><a href="#" ng-click="showPanorama()">street view</a></li>
                     <li data-icon="false"><a href="#" ng-click="closeService()">close</a></li>		    
+		</ul>
+	    </div>
+	    <div data-role="popup" id="menu-edit" class="menu">
+		<ul data-role="listview" data-inset="true">
+	            <li data-icon="false"><a href="#" ng-click="deletePath()" >delete</a></li>
+                    <li data-icon="false"><a href="#" ng-click="deleteAll()">clear</a></li>
 		</ul>
 	    </div>
     
@@ -116,11 +125,11 @@
 		<div id="panorama-box"  ng-show="currentService == 'panorama'">
                     <div id="panorama" my-panorama></div>
                     <div id="panorama_control">
-			<a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext" ng-click="backwardPanorama()"></a>
-			<a href="#" class="ui-btn ui-btn-inline ui-icon-carat-l ui-btn-icon-notext" ng-click="prevPanorama()"></a>
+			<a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext ui-mini" ng-click="backwardPanorama()"></a>
+			<a href="#" class="ui-btn ui-btn-inline ui-icon-carat-l ui-btn-icon-notext ui-mini" ng-click="prevPanorama()"></a>
 			<span class="label label-info"><span>{{panoramaIndex}}</span> / <span>{{panoramaCount}}</span></span>
-			<a  href="#" class="ui-btn ui-btn-inline ui-icon-carat-r ui-btn-icon-notext" ng-click="nextPanorama()"></a>
-			<a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-r ui-btn-icon-notext" ng-click="forwardPanorama()"></a>
+			<a  href="#" class="ui-btn ui-btn-inline ui-icon-carat-r ui-btn-icon-notext ui-mini" ng-click="nextPanorama()"></a>
+			<a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-r ui-btn-icon-notext ui-mini" ng-click="forwardPanorama()"></a>
 			
                     </div>
 		</div>
