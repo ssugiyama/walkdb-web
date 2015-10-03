@@ -371,6 +371,9 @@
 	    $('.menu').on('click', function () {
 		$(this).popup('close');
 	    });
+            $(window).on('resize', function () {
+                $('body').height($(window).height());
+            });
 	}
 	$(function () {
 	    if (location.search) {
@@ -440,9 +443,9 @@
         $scope.searchForm.limit = 20;
 
         // dirty hack
-        setTimeout(function () {
-            google.maps.event.trigger(walkService.map, 'resize');
-        }, 1000);
+//        setTimeout(function () {
+//            google.maps.event.trigger(walkService.map, 'resize');
+//        }, 500);
         $scope.setTheme = function (name) {
 	    if ($scope.themes.indexOf(name) == -1) name = 'Default';
             $scope.themeUri = self.themeInfo[name].uri;
@@ -540,21 +543,29 @@ console.log(item.date);
         $scope.setRadius = function (r) {
             walkService.distanceWidget.setRadius(r);
         }
+	function showTooltip(content, wait, duration) {
+	    $scope.tooltip = content;
+	    $("#panel-search").panel("close");
+	    setTimeout(function () {
+		var tooltip = $("#tooltip");
+		tooltip.popup("open");
+		if (duration != null) 
+		    setTimeout(function () {
+			tooltip.popup("close");
+		    }, duration);
+	    }, wait);
 
+	}
         $scope.showPath = function (id) {
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
 		if ($scope.isMobile) {
-		    $scope.tooltip = data.date + ": " + data.title + " (" + (Math.round(data.length*10)/10) + "km)";
-		    $("#panel-search").panel("close");
-		    setTimeout(function () {
-			$("#tooltip").popup("open");
-		    }, 1000);
-		    setTimeout(function () {
-			$("#tooltip").popup("close");
-		    }, 4000);
-		    
+		    var content = data.date + ": " + data.title 
+			+ " (" + (Math.round(data.length*10)/10) + "km"
+			+ (data.distance ? (", hausdorff distance=" + (Math.round(data.distance*10)/10) + "km") : "")
+			 + ")";
+		    showTooltip(content, 1000, 2000);
 		}
             }
             return false;
@@ -655,16 +666,31 @@ console.log(item.date);
         $scope.$watch('searchForm.filter', function (newValue, prevValue) {
             walkService.showDistanceWidget(newValue == 'neighborhood');
             walkService.showCities(newValue == 'cities');
-            if (newValue != 'neighborhood' && newValue != 'hausdorff' &&
-		$scope.searchForm.order == 'nearest_first') {
+	    if(newValue == 'hausdorff') {
+		$scope.searchForm.order = 'nearest_first';
+	    }
+            else if (prevValue == 'hausdorff') {
 		$scope.searchForm.order = 'newest_first';
 	    }
-	    if (newValue != 'any' && $scope.isMobile) {
-		if ($scope.isMobile) {
-		    $("#panel-search").panel("close");
+	    if ($scope.isMobile) {
+		var msg = null;
+		switch (newValue) {
+		case 'cities':
+		    msg = 'select cities on the map.';
+		    break;
+		case 'neighborhood':
+		    msg = 'select neighborhood on the map.';
+		    break;
 		}
+		if (msg) {
+		    $("#panel-search").panel("close");
+		    showTooltip(msg, 0);
+		}
+		setTimeout(function (){ 
+		    $("select[ng-model='searchForm.order']").selectmenu("refresh");
+		}, 0);
+		
 	    }
-	    
         });
         $scope.$watch('editable', function (newValue, prevValue) {
             if (walkService.pathManager.get('editable') != newValue)

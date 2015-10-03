@@ -140,15 +140,15 @@
                     <label class="control-label col-xs-3" for="order">order</label>
                     <div class="col-xs-4">
                         <select ng-model="searchForm.order" class="form-control">
-                            <option value="newest_first">newest first</option>
-                            <option value="oldest_first">oldest first</option>
-                            <option value="longest_first">longest first</option>
-                            <option value="shortest_first">shortest first</option>
-                            <option value="easternmost_first">easternmost first</option>
-                            <option value="westernmost_first">westernmost first</option>
-                            <option value="southernmost_first">southernmost first</option>
-                            <option value="northernmost_first">northernmost first</option>
-                            <option value="nearest_first" ng-if="searchForm.filter == 'neighborhood' || searchForm.filter == 'hausdorff'">nearest first</option>
+                            <option value="newest_first" ng-if="searchForm.filter != 'hausdorff'">newest first</option>
+                            <option value="oldest_first" ng-if="searchForm.filter != 'hausdorff'">oldest first</option>
+                            <option value="longest_first" ng-if="searchForm.filter != 'hausdorff'">longest first</option>
+                            <option value="shortest_first" ng-if="searchForm.filter != 'hausdorff'">shortest first</option>
+                            <option value="easternmost_first" ng-if="searchForm.filter != 'hausdorff'">easternmost first</option>
+                            <option value="westernmost_first" ng-if="searchForm.filter != 'hausdorff'">westernmost first</option>
+                            <option value="southernmost_first" ng-if="searchForm.filter != 'hausdorff'">southernmost first</option>
+                            <option value="northernmost_first" ng-if="searchForm.filter != 'hausdorff'">northernmost first</option>
+                            <option value="nearest_first" ng-if="searchForm.filter == 'hausdorff'">nearest first</option>
                         </select>
                     </div>
                     <label class="control-label col-xs-2" for="limit">limit</label>
@@ -172,7 +172,7 @@
 
                 </strong> : <button ng-click="showPaths()" ng-show="walks.length > 0" class="btn" ><span class="glyphicon glyphicon-map-marker"></span>show all</button>
                 <label class="radio-inline" ng-show="walks[0].distance != undefined">
-                    <input type="checkbox" name="" ng-model="show_distance" value="" />show distance</label>
+                    <input type="checkbox" name="" ng-model="show_distance" value="" />show hausdorff distance</label>
             </p>
             <div class="table-wrapper col-xs-12">
                 <table class="table table-condensed table-striped table-hover">

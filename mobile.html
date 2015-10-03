@@ -3,6 +3,8 @@
     <head>
 	<title>Nodewalk</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">	
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
 	<link rel="stylesheet" href="/stylesheets/mobile.css" />	
 	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
@@ -55,15 +57,15 @@
 			</select>
 		    </div>
 		    <select ng-model="searchForm.order" data-mini="true" >
-			<option value="newest_first">newest first</option>
-			<option value="oldest_first">oldest first</option>
-			<option value="longest_first">longest first</option>
-			<option value="shortest_first">shortest first</option>
-			<option value="easternmost_first">easternmost first</option>
-			<option value="westernmost_first">westernmost first</option>
-			<option value="southernmost_first">southernmost first</option>
-			<option value="northernmost_first">northernmost first</option>
-			<option value="nearest_first" ng-if="searchForm.filter == 'neighborhood' || searchForm.filter == 'hausdorff'">nearest first</option>
+			<option value="newest_first" ng-if="searchForm.filter != 'hausdorff'">newest first</option>
+			<option value="oldest_first" ng-if="searchForm.filter != 'hausdorff'">oldest first</option>
+			<option value="longest_first" ng-if="searchForm.filter != 'hausdorff'">longest first</option>
+			<option value="shortest_first" ng-if="searchForm.filter != 'hausdorff'">shortest first</option>
+			<option value="easternmost_first" ng-if="searchForm.filter != 'hausdorff'">easternmost first</option>
+			<option value="westernmost_first" ng-if="searchForm.filter != 'hausdorff'">westernmost first</option>
+			<option value="southernmost_first" ng-if="searchForm.filter != 'hausdorff'">southernmost first</option>
+			<option value="northernmost_first" ng-if="searchForm.filter != 'hausdorff'">northernmost first</option>
+			<option value="nearest_first" ng-if="searchForm.filter == 'hausdorff'">nearest first</option>
 		    </select>
 		    <div>
 			<label for="limit">limit</label>
