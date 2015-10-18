@@ -98,7 +98,10 @@
 	    </div>
 	    
             <div data-role="header">
-		<a href="#panel-search"  class="ui-mini ui-btn ui-icon-search ui-btn-icon-notext"></a>
+                <div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">	    
+			<a href="#panel-search"  class="ui-mini ui-btn ui-icon-search ui-btn-icon-notext"></a>
+			<a href="#"  class="ui-mini ui-btn ui-icon-location ui-btn-icon-notext" ng-click="currentPosition()"></a>			
+		</div>	
 		<h1>Nodewalk</h1>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
 		  <a href="#menu-edit" data-rel="popup" class="ui-btn ui-icon-edit ui-btn-icon-notext"></a>		  

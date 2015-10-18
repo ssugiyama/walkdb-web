@@ -265,6 +265,21 @@
 		    }
 		});
             };
+	    this.currentPosition = function (){
+		var self = this;
+		if (navigator.geolocation) {
+		    navigator.geolocation.getCurrentPosition(function (pos) {
+			
+			var center = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+			self.map.setCenter(center);
+		    }, function () {
+			alert("Unable to retrieve your location");
+		    });
+		}
+		else {
+		    alert("Geolocation is not supported by your browser");
+		}
+	    };
         };
 
         return new service();
@@ -734,6 +749,9 @@ console.log(item.date);
         };
         $scope.geocoderSearch = function (address) {
             walkService.geocoderSearch(address);
+        }
+        $scope.currentPosition = function () {
+            walkService.currentPosition();
         }
         $(document).bind("drop", function (e) {
             e.stopPropagation();
