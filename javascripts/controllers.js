@@ -558,12 +558,14 @@ console.log(item.date);
         $scope.setRadius = function (r) {
             walkService.distanceWidget.setRadius(r);
         }
-	function showTooltip(content, wait, duration) {
+	function showTooltip(content, wait, duration, transition) {
 	    $scope.tooltip = content;
 	    $("#panel-search").panel("close");
 	    setTimeout(function () {
 		var tooltip = $("#tooltip");
-		tooltip.popup("open");
+		tooltip.popup("open", {
+		    transition: transition
+		});
 		if (duration != null) 
 		    setTimeout(function () {
 			tooltip.popup("close");
@@ -580,7 +582,7 @@ console.log(item.date);
 			+ " (" + (Math.round(data.length*10)/10) + "km"
 			+ (data.distance ? (", hausdorff distance=" + (Math.round(data.distance*10)/10) + "km") : "")
 			 + ")";
-		    showTooltip(content, 1000, 2000);
+		    showTooltip(content, 1000, 2000, "slide");
 		}
             }
             return false;
@@ -699,7 +701,7 @@ console.log(item.date);
 		}
 		if (msg) {
 		    $("#panel-search").panel("close");
-		    showTooltip(msg, 0);
+		    showTooltip(msg, 0, null, "fade");
 		}
 		setTimeout(function (){ 
 		    $("select[ng-model='searchForm.order']").selectmenu("refresh");
@@ -754,9 +756,6 @@ console.log(item.date);
 	    else {
 		walkService.currentPosition();
 	    }
-        }
-        $scope.currentPosition = function () {
-            walkService.currentPosition();
         }
         $(document).bind("drop", function (e) {
             e.stopPropagation();
