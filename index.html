@@ -81,7 +81,7 @@
         </ul>
         <form class="navbar-form navbar-left" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Move to..." ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
+                <input type="text" class="form-control" placeholder="current position" ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" ng-click="geocoderSearch(address)">Go!</button>
                 </span>

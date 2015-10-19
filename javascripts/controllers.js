@@ -748,7 +748,12 @@ console.log(item.date);
             return true;
         };
         $scope.geocoderSearch = function (address) {
-            walkService.geocoderSearch(address);
+	    if (address) {
+		walkService.geocoderSearch(address);
+	    }
+	    else {
+		walkService.currentPosition();
+	    }
         }
         $scope.currentPosition = function () {
             walkService.currentPosition();

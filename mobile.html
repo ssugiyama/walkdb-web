@@ -100,7 +100,7 @@
             <div data-role="header">
                 <div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">	    
 			<a href="#panel-search"  class="ui-mini ui-btn ui-icon-search ui-btn-icon-notext"></a>
-			<a href="#"  class="ui-mini ui-btn ui-icon-location ui-btn-icon-notext" ng-click="currentPosition()"></a>			
+			<a href="#geocoder" data-rel="popup"  class="ui-mini ui-btn ui-icon-location ui-btn-icon-notext"></a>			
 		</div>	
 		<h1>Nodewalk</h1>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
@@ -142,6 +142,9 @@
 		<div data-role="popup" id="tooltip" data-transition="slide">
 		    <p>{{ tooltip }}</p>
 		</div>
+		<div data-role="popup" id="geocoder" data-transition="fade">
+			<input type="search" name="password" value="" placeholder="current position..." ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
+		</div>		
 	    </div>
 	</div>
     </body>
