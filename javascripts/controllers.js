@@ -33,10 +33,12 @@
                     }
                     else if(scope.searchForm.filter == 'cities') {
                         $.ajax({
-                            url: '/add_city',
+                            url: '/cities',
                             data: "latitude=" + event.latLng.lat() + "&longitude=" + event.latLng.lng(),
                             success : function (data) {
-                                self.addCity(data.jcode, data.the_geom);
+				data.forEach(function (c) {
+                                    self.addCity(c.jcode, c.the_geom);
+				});
                             },
                         });
                     }
@@ -369,37 +371,59 @@
             walkService.info = elm;
         };
     });
-    module.controller("WalkController",  function ($scope, $http, $filter, walkService) {
+    module.controller("WalkController",  function ($scope, $http, $filter, $location,$rootScope, walkService) {
         var self = this;
+	var needsRender = true;
         //	$scope.selectionLength = 0;
-	if ($('html').data('mobile')){
-	    $scope.isMobile = true;
-	    $(function (){ 
-		resizeMap();
-	    });
-	    var resizeMap = function () {
-		$('#main-box').height($(window).height() - $("[data-role='header']").height());
-		google.maps.event.trigger(walkService.map, 'resize');
-	    };
-	    $("#page-maps").on('pageshow', resizeMap);
-	    $(window).on('orientationchange', resizeMap);
-	    $('.menu').on('click', function () {
-		$(this).popup('close');
-	    });
-            $(window).on('resize', function () {
-                $('body').height($(window).height());
-            });
-	}
-	$(function () {
-	    if (location.search) {
-		$http.get('/search' + location.search).success(function (data) {
-                    searchCallback(data, true);
-		});
-            } else if ($scope.isMobile) {
-		$("#panel-search").panel("open");	    
-	    }
+	$('[data-toggle=offcanvas]').click(function() {
+	    $('#main-row').toggleClass('active');
 	});
+	$rootScope.$on('$locationChangeSuccess', function () {
+	    console.log($location.url());
+	    if ($scope.isMobile) return;
+	    if ($location.url()) {
+		if ($location.url().substring(0,2) != "/s") return;
+		var params = $location.search();
+		for (var key in params) {
+		    if (params[key] && key != "show") $scope.searchForm[key] = params[key];
+		}
+		if (needsRender) renderSearchForm();
+		needsRender = true;
+		$http.get($location.url()).success(function (data) {
+		    searchCallback(data, params["show"]);
+		});
+	    }
+	    else {
+		$('form').get(0).reset();
+		$scope.params = null;
+		$scope.walks = null;
+	    }
+	});	
 
+	function renderSearchForm() {
+	    switch ($scope.searchForm.filter) {
+	    case "neighborhood":
+		walkService.distanceWidget.setRadius(parseInt($scope.searchForm.radius));
+		walkService.distanceWidget.setCenter(new google.maps.LatLng($scope.searchForm.latitude, $scope.searchForm.longitude));		
+		break;
+	    case "cities":
+                $.ajax({
+                    url: '/cities',
+                    data: "jcodes=" + $scope.searchForm.cities,
+                    success : function (data) {
+			data.forEach(function (c) {
+                            walkService.addCity(c.jcode, c.the_geom);
+			});
+                    },
+                });
+		break;
+	    case "crossing":
+	    case "hausdorff":
+                walkService.pathManager.showPath($scope.searchForm.searchPath, true);		
+		break;
+	    }
+	}
+	
         function searchCallback (data, show, append) {
             if (append) {
                 $scope.walks.push.apply($scope.walks, data.rows);
@@ -414,11 +438,13 @@
             data.rows.forEach(function (item, index, array) {
                 $scope.result[item.id] = item;
             });
-            if (show) {
-                $scope.showPath(data.rows[0].id);
-            }
-	    if ($scope.isMobile && data.rows.length > 0){
-		$("#panel-search form").collapsible("collapse");
+	    switch (show) {
+	    case "all":
+                $scope.showPaths();
+		break;
+	    case "first":
+		$scope.showPath(data.rows[0].id);
+		break;
 	    }
         }
         $http.get('/version').success(function(data) {
@@ -476,26 +502,31 @@
                 $scope.searchForm.radius = walkService.distanceWidget.getRadius();
             }
             else {
-                $scope.searchForm.latitude = "";
-                $scope.searchForm.longitude = "";
-                $scope.searchForm.radius = "";
+                delete $scope.searchForm["latitude"];
+                delete $scope.searchForm["longitude"];
+                delete $scope.searchForm["radius"];
             }
             if ($scope.searchForm.filter == 'cities') {
                 $scope.searchForm.cities = Object.keys(walkService.cities).join(",");
             }
             else {
-                $scope.searchForm.cities = "";
+                delete $scope.searchForm["cities"];
             }
 
             if ($scope.searchForm.filter == 'hausdorff' || $scope.searchForm.filter == 'crossing') {
                 $scope.searchForm.searchPath = walkService.pathManager.getEncodedSelection();
             }
             else {
-                $scope.searchForm.searchPath = "";
+                delete $scope.searchForm["searchPath"];
             }
-            $http.get('/search?' + $.param($scope.searchForm)).success(function (data) {
-                searchCallback(data, false);
-            });
+	    delete $scope.searchForm["id"];
+	    delete $scope.searchForm["date"];
+	    needsRender = false;
+	    var url = '/search?' + $.param($scope.searchForm);
+	    $location.url(url);
+//            $http.get(url).success(function (data) {
+//                searchCallback(data, false);
+//            });
         };
         $scope.getNext = function (params) {
             $http.get('/search?' + params).success(function (data)
@@ -530,7 +561,7 @@ console.log(item.date);
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
             $scope.info_comment = item.comment;
-            var href = location.protocol + "//" + location.host + "?id=" + item.id;
+            var href = location.protocol + "//" + location.host + "#/search?show=first&id=" + item.id;
             var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
             var link = angular.element('<a></a>');
             link.attr('href', href);
@@ -577,13 +608,6 @@ console.log(item.date);
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
-		if ($scope.isMobile) {
-		    var content = data.date + ": " + data.title 
-			+ " (" + (Math.round(data.length*10)/10) + "km"
-			+ (data.distance ? (", hausdorff distance=" + (Math.round(data.distance*10)/10) + "km") : "")
-			 + ")";
-		    showTooltip(content, 1000, 2000, "slide");
-		}
             }
             return false;
 
@@ -592,9 +616,6 @@ console.log(item.date);
             for (var id in $scope.result) {
                 walkService.pathManager.showPath($scope.result[id].path, false);
             }
-	    if ($scope.isMobile) {
-		$("#panel-search").panel("close");
-	    }
             return false;
         };
 
@@ -689,25 +710,6 @@ console.log(item.date);
             else if (prevValue == 'hausdorff') {
 		$scope.searchForm.order = 'newest_first';
 	    }
-	    if ($scope.isMobile) {
-		var msg = null;
-		switch (newValue) {
-		case 'cities':
-		    msg = 'select cities on the map.';
-		    break;
-		case 'neighborhood':
-		    msg = 'select neighborhood on the map.';
-		    break;
-		}
-		if (msg) {
-		    $("#panel-search").panel("close");
-		    showTooltip(msg, 0, null, "fade");
-		}
-		setTimeout(function (){ 
-		    $("select[ng-model='searchForm.order']").selectmenu("refresh");
-		}, 0);
-		
-	    }
         });
         $scope.$watch('editable', function (newValue, prevValue) {
             if (walkService.pathManager.get('editable') != newValue)
@@ -750,13 +752,16 @@ console.log(item.date);
             return true;
         };
         $scope.geocoderSearch = function (address) {
-	    if (address) {
-		walkService.geocoderSearch(address);
-	    }
-	    else {
-		walkService.currentPosition();
-	    }
-        }
+	    walkService.geocoderSearch(address);
+        };
+	$scope.currentPosition = function () {
+	    walkService.currentPosition();
+	};
+	$scope.toggleDrawer = function () {
+	    $('.drawer').drawer('toggle');
+	    return false;
+	};
+	
         $(document).bind("drop", function (e) {
             e.stopPropagation();
             e.preventDefault();

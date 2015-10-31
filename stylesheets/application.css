@@ -13,11 +13,10 @@ td.way {
     text-align: right;
 }
 td.name div {
-    width: 160px;
+    width: 140px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
 }
 
 html, body {
@@ -62,17 +61,24 @@ body {
     overflow-y: hidden;
 }
 
-
-
 #side {
-    -webkit-flex:  0 0 400px ;
-    -moz-flex:  0 0 400px ;
-    -ms-flex:  0 0 400px ;
-    -o-flex:  0 0 400px ;
-    flex: 0 0 400px ;
-    overflow: scroll;
+    width :360px;
     padding-bottom: 16px;
     padding-top: 16px;
+    z-index: 100;
+}
+
+#side.fold {
+    margin-left: -360px;
+}
+
+#side.fold.open {
+    margin-left: 0;
+
+}
+
+#side .drawer-contents {
+    overflow-x: hidden;
 }
 
 #main {
@@ -164,3 +170,20 @@ tr {
     width: 100%;
     height: 100px;
 }
+
+.drawer-controls a, .drawer-controls a:hover {
+    margin-top: 25px;
+}
+
+@media screen and (max-width: 767px) {
+
+    #side {
+	width: 280px;
+    }
+    #side.fold {
+	margin-left: -280px;
+	
+    }
+
+}
+

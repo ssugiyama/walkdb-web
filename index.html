@@ -3,8 +3,12 @@
 <html ng-app="walkApp" ng-controller="WalkController">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
     <title>NodeWalk({{ app_env }};v{{ app_version }})</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/bootstrap-drawer.min.css" />
     <link rel="canonical" href="/" type="text/html" />	
     <link rel="alternate" media="handheld" href="/mobile.html" type="text/html" />
     <link ng-href="{{themeUri}}" rel="stylesheet" />
@@ -15,187 +19,197 @@
     <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/javascripts/drawer.min.js"></script>    
     <script src="/javascripts/controllers.js"></script>
     <script src="/javascripts/path_manager.js"></script>
     <script src="/javascripts/jquery.flot.min.js"></script>
     <script src="/javascripts/jquery.flot.resize.min.js"></script>
 </head>
-<body>
+<body>	
     <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
-        <a class="navbar-brand" href="https://github.com/ssugiyama/nodewalk">NodeWalk</a>
-        <ul class="nav navbar-nav">
-            <li><a ng-click="showAdmin()" href="#">Create...</a></li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Path
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a ng-click="editable = true;"  href="#">edit</a></li>
-                    <li><a ng-click="deletePath()"  href="#">delete</a></li>
-                    <li><a ng-click="deleteAll()" href="#">clear</a></li>
-                    <li><a ng-click="showModal()" href="#" >export/import...</a></li>
-                </ul>
-            </li>
-            <li class="dropdown" ng-show="searchForm.filter == 'cities'">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Cities
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a ng-click="resetCities()"  href="#">reset</a></li>
-                </ul>
-            </li>
-            <li class="dropdown" ng-show="searchForm.filter == 'neighborhood'">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Neighborhood
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a ng-click="setRadius(1000)"  href="#">radius: 1km</a></li>
-                    <li><a ng-click="setRadius(500)"  href="#">radius: 500m</a></li>
-                    <li><a ng-click="setRadius(250)"  href="#">radius: 250m</a></li>
-                    <li><a ng-click="setRadius(100)"  href="#">radius: 100m</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Accessory
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a ng-click="showElevation()" href="#">elevation</a></li>
-                    <li><a ng-click="showPanorama()" href="#">street view</a></li>
-                    <li><a ng-click="currentService = 'none'" href="#" >none</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Theme
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li ng-repeat="th in themes"><a ng-click="$parent.setTheme(th);" href="#" title="{{$parent.getThemeTitle(th)}}">{{th}}</a></li>
-                </ul>
-            </li>
-        </ul>
-        <form class="navbar-form navbar-left" role="search">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="current position or ..." ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="geocoderSearch(address)">Go!</button>
-                </span>
-            </div><!-- /input-group -->
-        </form>
-        <ul class="nav navbar-right">
-            <li class="navbar-text">Length: <span id="length">{{selectionLength | number:2}}</span>km</li>
-        </ul>
-    </div>
-    <div id="main-row">
-        <div id="side">
-            <form class="form-horizontal col-xs-12" role="form">
-                <input type="hidden" name="latitude" value="{{searchForm.latitude}}" />
-                <input type="hidden" name="longitude" value="{{searchForm.longitude}}" />
-                <input type="hidden" name="radius" value="{{searchForm.radius}}" />
-                <input type="hidden" name="cities" value="{{searchForm.cities}}"  />
-                <input type="hidden" name="search_path" value="{{searchForm.searchPath}}"  />
-                <div id="filterBox" class="form-group">
-                    <label class="control-label col-xs-3">filter</label>
-                    <div class="col-xs-9">
-                        <select ng-model="searchForm.filter" class="form-control">
-                            <option value="any">Any</option>
-                            <option value="neighborhood">Neighborhood</option>
-                            <option value="cities">Cities</option>
-                            <option value="hausdorff">Hausdorff</option>
-                            <option value="crossing">Crossing</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">month</label>
-                    <div class="col-xs-3">
-                        <select ng-model="searchForm.month" class="form-control">
-                            <option value=""></option>
-                            <option value="1">Jan</option>
-                            <option value="2">Feb</option>
-                            <option value="3">Mar</option>
-                            <option value="4">Apr</option>
-                            <option value="5">May</option>
-                            <option value="6">Jun</option>
-                            <option value="7">Jul</option>
-                            <option value="8">Aug</option>
-                            <option value="9">Sep</option>
-                            <option value="10">Oct</option>
-                            <option value="11">Nov</option>
-                            <option value="12">Dec</option>
-                        </select>
-                    </div>
-                    <label class="control-label col-xs-2">year</label>
-                    <div class="col-xs-4">
-                        <select ng-model="searchForm.year" class="form-control">
-                            <option value=""></option>
-                            <option ng-repeat="y in years" value="{{y}}">{{y}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3" for="order">order</label>
-                    <div class="col-xs-4">
-                        <select ng-model="searchForm.order" class="form-control">
-                            <option value="newest_first" ng-if="searchForm.filter != 'hausdorff'">newest first</option>
-                            <option value="oldest_first" ng-if="searchForm.filter != 'hausdorff'">oldest first</option>
-                            <option value="longest_first" ng-if="searchForm.filter != 'hausdorff'">longest first</option>
-                            <option value="shortest_first" ng-if="searchForm.filter != 'hausdorff'">shortest first</option>
-                            <option value="easternmost_first" ng-if="searchForm.filter != 'hausdorff'">easternmost first</option>
-                            <option value="westernmost_first" ng-if="searchForm.filter != 'hausdorff'">westernmost first</option>
-                            <option value="southernmost_first" ng-if="searchForm.filter != 'hausdorff'">southernmost first</option>
-                            <option value="northernmost_first" ng-if="searchForm.filter != 'hausdorff'">northernmost first</option>
-                            <option value="nearest_first" ng-if="searchForm.filter == 'hausdorff'">nearest first</option>
-                        </select>
-                    </div>
-                    <label class="control-label col-xs-2" for="limit">limit</label>
-                    <div class="col-xs-3">
-                        <input type="text" ng-model="searchForm.limit"  class="form-control" />
-                    </div>
-                </div>
-                <div  class="form-group">
-                    <div class=" col-xs-offset-3 col-xs-9">
-                        <button ng-click="search()" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>search</button>
-                        <input type="reset" value="reset" class="btn" />
-                    </div>
-                </div>
+	<div class="navbar-header">
+	    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-content" aria-expanded="false">
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	    </button>	
+            <a class="navbar-brand" href="https://github.com/ssugiyama/nodewalk">NodeWalk</a>
+	</div>
+	<div class="collapse navbar-collapse" id="navbar-content">
+            <ul class="nav navbar-nav">
+		<li><a ng-click="showAdmin()" href="javascript:void(0)">Create...</a></li>
+		<li class="dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+			Path
+			<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+			<li><a ng-click="editable = true;"  href="javascript:void(0)">edit</a></li>
+			<li><a ng-click="deletePath()"  href="javascript:void(0)">delete</a></li>
+			<li><a ng-click="deleteAll()" href="javascript:void(0)">clear</a></li>
+			<li><a ng-click="showModal()" href="javascript:void(0)" >export/import...</a></li>
+                    </ul>
+		</li>
+		<li class="dropdown" ng-show="searchForm.filter == 'cities'">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+			Cities
+			<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+			<li><a ng-click="resetCities()"  href="javascript:void(0)">reset</a></li>
+                    </ul>
+		</li>
+		<li class="dropdown" ng-show="searchForm.filter == 'neighborhood'">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+			Neighborhood
+			<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+			<li><a ng-click="setRadius(1000)"  href="javascript:void(0)">radius: 1km</a></li>
+			<li><a ng-click="setRadius(500)"  href="javascript:void(0)">radius: 500m</a></li>
+			<li><a ng-click="setRadius(250)"  href="javascript:void(0)">radius: 250m</a></li>
+			<li><a ng-click="setRadius(100)"  href="javascript:void(0)">radius: 100m</a></li>
+                    </ul>
+		</li>
+		<li class="dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+			Accessory
+			<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+			<li><a ng-click="showElevation()" href="javascript:void(0)">elevation</a></li>
+			<li><a ng-click="showPanorama()" href="javascript:void(0)">street view</a></li>
+			<li><a ng-click="currentService = 'none'" href="javascript:void(0)" >none</a></li>
+                    </ul>
+		</li>
+		<li class="dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+			Theme
+			<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+			<li ng-repeat="th in themes"><a ng-click="$parent.setTheme(th);" href="javascript:void(0)" title="{{$parent.getThemeTitle(th)}}">{{th}}</a></li>
+                    </ul>
+		</li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+		<div class="input-group">
+                    <span class="input-group-btn">
+			<button class="btn btn-default" type="button" ng-click="currentPosition(address)"><span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span></button>
+                    </span>		    
+                    <input type="text" class="form-control" placeholder="Move to ..." ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
+		</div><!-- /input-group -->
             </form>
-            <p id="message" class="well well-sm col-xs-12" ng-show="walks != null">
-                <strong ng-switch on="total_count">
-                    <span ng-switch-when="null">successfully saved</span>
-                    <span ng-switch-when="0">No results</span>
-                    <span ng-switch-when="1">1 / 1 item</span>
-                    <span ng-switch-default>{{ walks.length }} / {{ total_count }} items</span>
+            <ul class="nav navbar-right">
+		<li class="navbar-text">Length: <span id="length">{{selectionLength | number:2}}</span>km</li>
+            </ul>
+	</div>
+    </div>
+    <div id="main-row" class="panel panel-default has-inner-drawer">
+        <div id="side" class="drawer drawer-inside fold">
+	    <div class="drawer-controls">
+		<a href="javascript:void(0);" aria-foldedopen="false" aria-controls="side" class="btn btn-primary btn-sm" ng-click="toggleDrawer();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+	    </div>
+	    <div class="drawer-contents">
+		    <form class="form-horizontal" role="form">
+			    <input type="hidden" name="latitude" value="{{searchForm.latitude}}" />
+			    <input type="hidden" name="longitude" value="{{searchForm.longitude}}" />
+			    <input type="hidden" name="radius" value="{{searchForm.radius}}" />
+			    <input type="hidden" name="cities" value="{{searchForm.cities}}"  />
+			    <input type="hidden" name="search_path" value="{{searchForm.searchPath}}"  />
+			    <div id="filterBox" class="form-group">
+				    <div class="col-xs-offset-1 col-xs-10">
+					    <select ng-model="searchForm.filter" class="form-control">
+						    <option value="any">Filter</option>
+						    <option value="neighborhood">Neighborhood</option>
+						    <option value="cities">Cities</option>
+						    <option value="hausdorff">Hausdorff</option>
+						    <option value="crossing">Crossing</option>
+					    </select>
+				    </div>
+			    </div>
+			    <div class="form-group">
+				<div class="col-xs-offset-1 col-xs-5">
+					    <select ng-model="searchForm.month" class="form-control">
+						    <option value="">Month</option>
+						    <option value="1">Jan</option>
+						    <option value="2">Feb</option>
+						    <option value="3">Mar</option>
+						    <option value="4">Apr</option>
+						    <option value="5">May</option>
+						    <option value="6">Jun</option>
+						    <option value="7">Jul</option>
+						    <option value="8">Aug</option>
+						    <option value="9">Sep</option>
+						    <option value="10">Oct</option>
+						    <option value="11">Nov</option>
+						    <option value="12">Dec</option>
+					    </select>
+				    </div>
+				    <div class="col-xs-5">
+					    <select ng-model="searchForm.year" class="form-control">
+						    <option value="">Year</option>
+						    <option ng-repeat="y in years" value="{{y}}">{{y}}</option>
+					    </select>
+				    </div>
+			    </div>
+			    <div class="form-group">
+				<div class="col-xs-offset-1 col-xs-6">
+					    <select ng-model="searchForm.order" class="form-control">
+						    <option value="newest_first" ng-if="searchForm.filter != 'hausdorff'">newest first</option>
+						    <option value="oldest_first" ng-if="searchForm.filter != 'hausdorff'">oldest first</option>
+						    <option value="longest_first" ng-if="searchForm.filter != 'hausdorff'">longest first</option>
+						    <option value="shortest_first" ng-if="searchForm.filter != 'hausdorff'">shortest first</option>
+						    <option value="easternmost_first" ng-if="searchForm.filter != 'hausdorff'">easternmost first</option>
+						    <option value="westernmost_first" ng-if="searchForm.filter != 'hausdorff'">westernmost first</option>
+						    <option value="southernmost_first" ng-if="searchForm.filter != 'hausdorff'">southernmost first</option>
+						    <option value="northernmost_first" ng-if="searchForm.filter != 'hausdorff'">northernmost first</option>
+						    <option value="nearest_first" ng-if="searchForm.filter == 'hausdorff'">nearest first</option>
+					    </select>
+				    </div>
+				    <div class="col-xs-4">
+					    <input type="text" ng-model="searchForm.limit"  class="form-control" />
+				    </div>
+			    </div>
+			    <div  class="form-group">
+				    <div class="col-xs-offset-2 col-xs-8">
+					    <button ng-click="search()" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>search</button>
+					    <input type="reset" value="reset" class="btn" />
+				    </div>
+			    </div>
+		    </form>
+		    <p id="message" class="well well-sm col-xs-offset-1 col-xs-10" ng-show="walks != null">
+			    <strong ng-switch on="total_count">
+				    <span ng-switch-when="null">successfully saved</span>
+				    <span ng-switch-when="0">No results</span>
+				    <span ng-switch-when="1">1 / 1 item</span>
+				    <span ng-switch-default>{{ walks.length }} / {{ total_count }} items</span>
 
-                </strong> : <button ng-click="showPaths()" ng-show="walks.length > 0" class="btn" ><span class="glyphicon glyphicon-map-marker"></span>show all</button>
-                <label class="radio-inline" ng-show="walks[0].distance != undefined">
-                    <input type="checkbox" name="" ng-model="show_distance" value="" />show hausdorff distance</label>
-            </p>
-            <div class="table-wrapper col-xs-12">
-                <table class="table table-condensed table-striped table-hover">
-                    <tbody id="tbody">
-                        <tr ng-repeat="item in walks" ng-click="showPath(item.id)" title="{{ item.comment }}">
-                            <td>{{ $index + 1 }}</td>
-                            <td class="date">{{item.date}}</td>
-                            <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
-                            <td class="actions">
-                                <a href="#" class="glyphicon glyphicon-info-sign" ng-click="showInfo(item, $event)"></a>
-                                <a href="#" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>
-                            </td>
-                        </tr>
+			    </strong> : <button ng-click="showPaths()" ng-show="walks.length > 0" class="btn" ><span class="glyphicon glyphicon-map-marker"></span>show all</button>
+			    <label class="radio-inline" ng-show="walks[0].distance != undefined">
+				    <input type="checkbox" name="" ng-model="show_distance" value="" />show hausdorff distance</label>
+		    </p>
+		    <div class="table-wrapper table-responsive col-xs-12">
+			    <table class="table table-condensed table-striped table-hover">
+				    <tbody id="tbody">
+					    <tr ng-repeat="item in walks" ng-click="showPath(item.id)" title="{{ item.comment }}">
+						    <td class="hidden-xs">{{ $index + 1 }}</td>
+						    <td class="date">{{item.date}}</td>
+						    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
+						    <td class="actions">
+							    <a href="javascript:void(0)" class="glyphicon glyphicon-info-sign" ng-click="showInfo(item, $event)"></a>
+							    <a href="javascript:void(0)" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>
+						    </td>
+					    </tr>
 
-                    </tbody>
-                </table>
-                <button class="btn btn-primary" ng-show="params" ng-click="getNext(params)">more</button>
-            </div>
+				    </tbody>
+			    </table>
+		    </div>
+		    <button class="btn btn-primary btn-more col-xs-offset-3 col-xs-6" ng-show="params" ng-click="getNext(params)">more</button>
+	    </div>
         </div><!-- /side -->
-
-        <div id="main" >
+	    
+        <div id="main">
             <div my-map id="map"></div>
             <div id="elevation-box" ng-show="currentService == 'elevation'">
                 <button class="close" ng-click="closeService()">&times;</button>
