@@ -3,7 +3,7 @@
 <html ng-app="walkApp" ng-controller="WalkController">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
     <title>NodeWalk({{ app_env }};v{{ app_version }})</title>
@@ -106,7 +106,7 @@
 	</div>
     </div>
     <div id="main-row" class="panel panel-default has-inner-drawer">
-        <div id="side" class="drawer drawer-inside fold">
+        <div id="side" class="drawer drawer-inside fold open">
 	    <div class="drawer-controls">
 		<a href="javascript:void(0);" aria-foldedopen="false" aria-controls="side" class="btn btn-primary btn-sm" ng-click="toggleDrawer();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
 	    </div>
@@ -189,7 +189,7 @@
 			    <label class="radio-inline" ng-show="walks[0].distance != undefined">
 				    <input type="checkbox" name="" ng-model="show_distance" value="" />show hausdorff distance</label>
 		    </p>
-		    <div class="table-wrapper table-responsive col-xs-12">
+		    <div class="table-wrapper">
 			    <table class="table table-condensed table-striped table-hover">
 				    <tbody id="tbody">
 					    <tr ng-repeat="item in walks" ng-click="showPath(item.id)" title="{{ item.comment }}">

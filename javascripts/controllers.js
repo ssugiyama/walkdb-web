@@ -700,7 +700,6 @@ console.log(item.date);
         $scope.closeService = function () {
             $scope.currentService = 'none';
         };
-
         $scope.$watch('searchForm.filter', function (newValue, prevValue) {
             walkService.showDistanceWidget(newValue == 'neighborhood');
             walkService.showCities(newValue == 'cities');
@@ -721,7 +720,11 @@ console.log(item.date);
                 google.maps.event.trigger(walkService.map, 'resize');
             }, 0);
         });
-
+	$("#navbar-content").on('hidden.bs.collapse', function (newValue, prevValue) {
+            setTimeout(function () {
+                google.maps.event.trigger(walkService.map, 'resize');
+            }, 0);
+        });
         $scope.nextPanorama = function (){
             walkService.panoramaIndex ++;
             walkService.showPanorama();
