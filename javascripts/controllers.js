@@ -375,9 +375,6 @@
         var self = this;
 	var needsRender = true;
         //	$scope.selectionLength = 0;
-	$('[data-toggle=offcanvas]').click(function() {
-	    $('#main-row').toggleClass('active');
-	});
 	$rootScope.$on('$locationChangeSuccess', function () {
 	    console.log($location.url());
 	    if ($scope.isMobile) return;
@@ -399,7 +396,6 @@
 		$scope.walks = null;
 	    }
 	});	
-
 	function renderSearchForm() {
 	    switch ($scope.searchForm.filter) {
 	    case "neighborhood":
@@ -775,7 +771,10 @@ console.log(item.date);
             e.stopPropagation();
             e.preventDefault();
         });
-
+	$('#main-row').height($(window).height() - $('.navbar-header').height());	
+	$(window).on('resize orientationchange', function () {
+	    $('#main-row').height($(window).height() - $('.navbar-header').height());
+	});
     });
 
 })(this);

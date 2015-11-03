@@ -73,13 +73,13 @@
 		</li>
 		<li class="dropdown">
                     <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-			Accessory
+			View
 			<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
 			<li><a ng-click="showElevation()" href="javascript:void(0)">elevation</a></li>
 			<li><a ng-click="showPanorama()" href="javascript:void(0)">street view</a></li>
-			<li><a ng-click="currentService = 'none'" href="javascript:void(0)" >none</a></li>
+			<li><a ng-click="currentService = 'none'" href="javascript:void(0)" >close</a></li>
                     </ul>
 		</li>
 		<li class="dropdown">
@@ -217,12 +217,12 @@
             </div>
             <div id="panorama-box" ng-show="currentService == 'panorama'">
                 <div id="panorama" my-panorama></div>
-                <div id="panorama_control">
-                    <button class="btn" ng-click="backwardPanorama()"><span class="glyphicon glyphicon-fast-backward"></span></button>
-                    <button class="btn" ng-click="prevPanorama()"><span class="glyphicon glyphicon-step-backward"></span></button>
+                <div id="panorama-controls">
+                    <button class="btn btn-sm" ng-click="backwardPanorama()"><span class="glyphicon glyphicon-fast-backward"></span></button>
+                    <button class="btn btn-sm" ng-click="prevPanorama()"><span class="glyphicon glyphicon-step-backward"></span></button>
                     <span class="label label-info"><span>{{panoramaIndex}}</span> / <span>{{panoramaCount}}</span></span>
-                    <button class="btn" ng-click="nextPanorama()"><span class="glyphicon glyphicon-step-forward"></span></button>
-                    <button class="btn" ng-click="forwardPanorama()"><span class="glyphicon glyphicon-fast-forward"></span></button>
+                    <button class="btn btn-sm" ng-click="nextPanorama()"><span class="glyphicon glyphicon-step-forward"></span></button>
+                    <button class="btn btn-sm" ng-click="forwardPanorama()"><span class="glyphicon glyphicon-fast-forward"></span></button>
 
                 </div>
             </div>

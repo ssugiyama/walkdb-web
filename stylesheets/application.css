@@ -27,42 +27,15 @@ html, body {
     height: 100%;
 }
 
-body {
-    display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: -o-flex;
-	display: flex;
-    -webkit-flex-direction: column;
-	-moz-flex-direction: column;
-	-ms-flex-direction: column;
-	-o-flex-direction: column;
-	flex-direction: column;
-}
-
 #nav {
     width: 100%;
     margin-bottom: 0 !important;
 }
 
 #main-row {
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flex;
-    display: -o-flex;
-    display: flex;
-    -webkit-flex-direction: row;
-    -moz-flex-direction: row;
-    -ms-flex-direction: row;
-    -o-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex:  1 1 auto ;
-    -moz-flex:  1 1 auto ;
-    -ms-flex:  1 1 auto ;
-    -o-flex:  1 1 auto ;
-    flex: 1 1 auto ;
-    overflow-y: hidden;
+    width: 100%;
     margin-bottom: 0;
+    border: 0;
 }
 
 #side {
@@ -78,24 +51,13 @@ body {
 
 #side.fold.open {
     margin-left: 0;
-
 }
 
 #main {
-    -webkit-flex:  1 1 auto ;
-    -moz-flex:  1 1 auto ;
-    -ms-flex:  1 1 auto ;
-    -o-flex:  1 1 auto ;
-    flex: 1 1 auto ;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flex;
-    display: -o-flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
     display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    -o-flex-direction: column;
     flex-direction: column;
 }
 
@@ -106,6 +68,7 @@ body {
     -ms-flex:  1 1 auto ;
     -o-flex:  1 1 auto ;
     flex: 1 1 auto ;
+    width: 100%;
 }
 .close {
     position: absolute;
@@ -123,41 +86,41 @@ tr {
 #elevation-box {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 25%;
     -webkit-flex:  0 0 200px ;
     -moz-flex:  0 0 200px ;
     -ms-flex:  0 0 200px ;
     -o-flex:  0 0 200px ;
-    flex: 0 0 200px ;
+    flex: 0 0 25% ;
 }
-
-#panorama-box {
-    width: 100%;
-    height: 300px;
-    -webkit-flex:  0 0 300px; ;
-    -moz-flex:  0 0 300px ;
-    -ms-flex:  0 0 300px ;
-    -o-flex:  0 0 300px ;
-    flex: 0 0 300px ;
-    position: relative;        
-}
-
 #elevation-box > div{
     width: 100%;
     height: 100%;
 }
+
+#panorama-box {
+    width: 100%;
+    height: 40%;
+    -webkit-flex:  0 0 300px; ;
+    -moz-flex:  0 0 300px ;
+    -ms-flex:  0 0 300px ;
+    -o-flex:  0 0 300px ;
+    flex: 0 0 40% ;
+    position: relative;        
+}
+
 #panorama {
     position: absolute;
     width: 100%;
     top: 0;
-    bottom: 40px;
+    bottom: 30px;
 }
 
-#panorama_control {
+#panorama-controls {
     width: 100%;
     text-align: center;    
     position: absolute;
-    height: 40px;
+    height: 30px;
     bottom: 0;
 }
 
@@ -169,6 +132,7 @@ tr {
 .table-wrapper {
     margin-left: 5px;
     margin-right: 5px;
+    clear: both;
 }
 .modal textarea {
     width: 100%;
@@ -188,6 +152,10 @@ tr {
 }
 @media screen and (max-width: 767px) {
 
+    #nav {
+	overflow-y: scroll;
+    }
+
     #side {
 	width: 280px;
     }
@@ -200,3 +168,20 @@ tr {
     
 }
 
+@media screen and (max-width: 767px) and (orientation: landscape) {
+    #main {
+	flex-direction: row;
+    }
+    #panorama-box {
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	width: 50%;
+	flex: 0 0 50%;
+    }
+    #elevation-box {
+	height: 100%;
+	width: 50%;
+	flex: 0 0 50%;
+    }
+}
