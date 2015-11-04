@@ -374,6 +374,7 @@
     module.controller("WalkController",  function ($scope, $http, $filter, $location,$rootScope, walkService) {
         var self = this;
 	var needsRender = true;
+	var isMobile = false;
         //	$scope.selectionLength = 0;
 	$rootScope.$on('$locationChangeSuccess', function () {
 	    console.log($location.url());
@@ -395,7 +396,8 @@
 		$scope.params = null;
 		$scope.walks = null;
 	    }
-	});	
+	});
+	if ($('.navbar-toggle').is(':visible')) isMobile = true;
 	function renderSearchForm() {
 	    switch ($scope.searchForm.filter) {
 	    case "neighborhood":
@@ -604,6 +606,7 @@ console.log(item.date);
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
+		if (isMobile) $('.drawer').drawer('close');
             }
             return false;
 
@@ -612,6 +615,7 @@ console.log(item.date);
             for (var id in $scope.result) {
                 walkService.pathManager.showPath($scope.result[id].path, false);
             }
+	    if (isMobile) $('.drawer').drawer('close');
             return false;
         };
 
@@ -705,6 +709,8 @@ console.log(item.date);
             else if (prevValue == 'hausdorff') {
 		$scope.searchForm.order = 'newest_first';
 	    }
+	    if ((newValue == 'cities' || newValue == 'neighborhood') && isMobile)
+		$('.drawer').drawer('close');
         });
         $scope.$watch('editable', function (newValue, prevValue) {
             if (walkService.pathManager.get('editable') != newValue)

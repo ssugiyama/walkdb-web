@@ -195,7 +195,7 @@
 					    <tr ng-repeat="item in walks" ng-click="showPath(item.id)" title="{{ item.comment }}">
 						    <td class="hidden-xs">{{ $index + 1 }}</td>
 						    <td class="date">{{item.date}}</td>
-						    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
+						    <td class="name">{{item.title}}</td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
 						    <td class="actions">
 							    <a href="javascript:void(0)" class="glyphicon glyphicon-info-sign" ng-click="showInfo(item, $event)"></a>
 							    <a href="javascript:void(0)" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>

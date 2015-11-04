@@ -15,8 +15,9 @@ td.way {
     white-space: nowrap;
     text-align: right;
 }
-td.name div {
-    width: 140px;
+td.name {
+    display: inline-block;
+    width: 160px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -142,8 +143,11 @@ tr {
 .drawer-contents {
     width: 100%;
 }
+
 #side .drawer-controls {
-    margin-top: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: auto;
 }
 
 #side .drawer-contents {
@@ -162,7 +166,7 @@ tr {
     #side.fold {
 	margin-left: -280px;
     }
-    td.name div {
+    td.name {
 	width: 120px;
     }
     
