@@ -559,7 +559,7 @@ console.log(item.date);
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
             $scope.info_comment = item.comment;
-            var href = location.protocol + "//" + location.host + "#/search?show=first&id=" + item.id;
+            var href = location.protocol + "//" + location.host + "/#/search?show=first&id=" + item.id;
             var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
             var link = angular.element('<a></a>');
             link.attr('href', href);
