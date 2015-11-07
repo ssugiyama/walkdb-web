@@ -445,11 +445,6 @@
 		break;
 	    }
         }
-        $http.get('/version').success(function(data) {
-            Object.keys(data).forEach(function (key) {
-                $scope[key] = data[key];
-            });
-        });
 
         $http.get('http://api.bootswatch.com/3/').success(function (data) {
 	    var themeInfo = {
