@@ -666,13 +666,8 @@ console.log(item.date);
             }
             $scope.selection.path = $scope.update_path ? walkService.pathManager.getEncodedSelection() : null;
             $http.post('/save', $scope.selection).success(function (data) {
-                $scope.selection = data[0];
-                // fix date format after saving
-                data[0].date = $filter('date')(data[0].date, 'yyyy-MM-dd');
-                $(walkService.admin).modal('hide');
-                $scope.walks = data;
-                $scope.total_count = null;
-                $scope.params = null;
+		var url = '/search?id=' + data[0].id
+		$location.url(url);
             }).error(function (data) {
                 alert(data);
             });
