@@ -378,7 +378,6 @@
         //	$scope.selectionLength = 0;
 	$rootScope.$on('$locationChangeSuccess', function () {
 	    console.log($location.url());
-	    if ($scope.isMobile) return;
 	    if ($location.url()) {
 		if ($location.url().substring(0,2) != "/s") return;
 		var params = $location.search();
@@ -601,7 +600,7 @@ console.log(item.date);
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
-		if (isMobile) $('.drawer').drawer('close');
+		if (isMobile) $('.drawer').drawer('toggle');
             }
             return false;
 
@@ -610,7 +609,7 @@ console.log(item.date);
             for (var id in $scope.result) {
                 walkService.pathManager.showPath($scope.result[id].path, false);
             }
-	    if (isMobile) $('.drawer').drawer('close');
+	    if (isMobile) $('.drawer').drawer('toggle');
             return false;
         };
 
@@ -705,7 +704,7 @@ console.log(item.date);
 		$scope.searchForm.order = 'newest_first';
 	    }
 	    if ((newValue == 'cities' || newValue == 'neighborhood') && isMobile)
-		$('.drawer').drawer('close');
+		$('.drawer').drawer('toggle');
         });
         $scope.$watch('editable', function (newValue, prevValue) {
             if (walkService.pathManager.get('editable') != newValue)
