@@ -6,7 +6,7 @@
 #elevation-box img { max-width: none; }
 #panorama-box img {max-width: none; }
 #side td {
-    padding: 2px 1px 2px 1px;
+    padding: 2px 3px;
 }
 td.date, td.actions {
     white-space: nowrap;
@@ -15,9 +15,7 @@ td.way {
     white-space: nowrap;
     text-align: right;
 }
-td.name {
-    display: inline-block;
-    width: 160px;
+td.name div {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -130,11 +128,6 @@ tr {
     bottom : 0;
 }
 
-.table-wrapper {
-    margin-left: 5px;
-    margin-right: 5px;
-    clear: both;
-}
 .modal textarea {
     width: 100%;
     height: 100px;
@@ -142,6 +135,10 @@ tr {
 
 .drawer-contents {
     width: 100%;
+}
+
+#side.drawer {
+    color: inherit;
 }
 
 #side .drawer-controls {
@@ -153,7 +150,9 @@ tr {
 #side .drawer-contents {
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: inherit;	
 }
+
 @media screen and (max-width: 767px) {
 
     #nav {
@@ -166,10 +165,6 @@ tr {
     #side.fold {
 	margin-left: -280px;
     }
-    td.name {
-	width: 120px;
-    }
-    
 }
 
 @media screen and (max-width: 767px) and (orientation: landscape) {

@@ -435,6 +435,13 @@
             data.rows.forEach(function (item, index, array) {
                 $scope.result[item.id] = item;
             });
+	    setTimeout(function () {
+		if (data.count > 0) {
+		    var w = $('#side').outerWidth() - $('td.id').outerWidth() - $('td.date').outerWidth() - $('td.way').outerWidth() - $('td.actions').outerWidth();
+		    console.log(w);
+		    $('td.name div').outerWidth(w - 6);
+		}
+	    }, 0);
 	    switch (show) {
 	    case "all":
                 $scope.showPaths();
