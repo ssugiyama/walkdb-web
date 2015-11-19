@@ -666,6 +666,7 @@ console.log(item.date);
             }
             $scope.selection.path = $scope.update_path ? walkService.pathManager.getEncodedSelection() : null;
             $http.post('/save', $scope.selection).success(function (data) {
+                $(walkService.admin).modal('hide');
 		var url = '/search?id=' + data[0].id
 		$location.url(url);
             }).error(function (data) {
