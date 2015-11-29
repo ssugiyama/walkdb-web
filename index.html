@@ -189,7 +189,7 @@
 		    </p>
 		    <table class="table table-condensed table-striped table-hover">
 			    <tbody id="tbody">
-				    <tr ng-repeat="item in walks" ng-click="showPath(item.id)" title="{{ item.comment }}">
+				    <tr ng-repeat="item in walks" ng-click="showPath(item.id)">
 					    <td class="hidden-xs id">{{ $index + 1 }}</td>
 					    <td class="date">{{item.date}}</td>
 					    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
@@ -212,6 +212,7 @@
                 <div my-elevation></div>
             </div>
             <div id="panorama-box" ng-show="currentService == 'panorama'">
+                <button class="close" ng-click="closeService()">&times;</button>		
                 <div id="panorama" my-panorama></div>
                 <div id="panorama-controls">
                     <button class="btn btn-sm" ng-click="backwardPanorama()"><span class="glyphicon glyphicon-fast-backward"></span></button>
@@ -222,6 +223,13 @@
 
                 </div>
             </div>
+	    <div id="comment-box" ng-show="currentService == 'comment'">
+                <button class="close" ng-click="closeService()">&times;</button>
+		<div class="well well-sm">
+		    <h3>{{comment_title}}</h3>
+		    <div ng-bind-html="comment_body"></div>
+		</div>
+	    </div>
         </div><!-- /main -->
     </div><!-- /main-row -->
     <div my-modal class="modal fade">
@@ -264,7 +272,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-xs-3" for="comment">comment</label>
+                            <label class="control-label col-xs-3" for="comment">comment(markdown)</label>
                             <div class="col-xs-9">
                                 <textarea name="comment" ng-model="selection.comment" class="form-control" ></textarea>
                             </div>
@@ -302,12 +310,6 @@
                         <label class="control-label col-xs-2">link</label>
                         <div class="col-xs-10">
                             <textarea readonly="readonly" ng-model="info_link" class="form-control"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">comment</label>
-                        <div class="col-xs-10">
-                            <textarea readonly="readonly" ng-model="info_comment" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>

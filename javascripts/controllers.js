@@ -371,7 +371,7 @@
             walkService.info = elm;
         };
     });
-    module.controller("WalkController",  function ($scope, $http, $filter, $location,$rootScope, walkService) {
+    module.controller("WalkController",  function ($scope, $sce, $http, $filter, $location,$rootScope, walkService) {
         var self = this;
 	var needsRender = true;
 	var isMobile = false;
@@ -559,14 +559,12 @@ console.log(item.date);
         };
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
-            $scope.info_comment = item.comment;
             var href = location.protocol + "//" + location.host + "/#/search?show=first&id=" + item.id;
             var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
             var link = angular.element('<a></a>');
             link.attr('href', href);
             link.attr('target', '_blank');
             link.text(body);
-            if (item.comment) link.attr('title', item.comment);
             $scope.info_link = link.get(0).outerHTML;
             $scope.info_url  = href;
             $scope.twitter_params = 'text=' + encodeURIComponent($scope.info_title) + '&url=' + encodeURIComponent($scope.info_uri);
@@ -607,6 +605,9 @@ console.log(item.date);
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
+		$scope.comment_title = data.date + " " + data.title;
+		$scope.comment_body = $sce.trustAsHtml(data.comment);
+		$scope.currentService = 'comment';
 		if (isMobile) $scope.toggleSide();
             }
             return false;
