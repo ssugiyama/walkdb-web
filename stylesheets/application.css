@@ -35,21 +35,36 @@ html, body {
     width: 100%;
     margin-bottom: 0;
     border: 0;
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;    
 }
 
 #side {
-    width :350px;
     padding-bottom: 16px;
     padding-top: 16px;
     z-index: 100;
-}
-
-#side.fold {
+    position: fixed;
+    width: 350px;
+    height: 100%;
     margin-left: -350px;
+    overflow-y: visible;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }
 
-#side.fold.open {
-    margin-left: 0;
+.sidebar {
+    position :relative;
+    height: 100%;
+    overflow: auto;
+}
+
+#main-row.open {
+    padding-left: 350px;
 }
 
 #main {
@@ -60,7 +75,6 @@ html, body {
     flex-direction: column;
 }
 
-
 #map {
     -webkit-flex:  1 1 auto ;
     -moz-flex:  1 1 auto ;
@@ -69,6 +83,7 @@ html, body {
     flex: 1 1 auto ;
     width: 100%;
 }
+
 .close {
     position: absolute;
     right: 10px;
@@ -133,24 +148,25 @@ tr {
     height: 100px;
 }
 
-.drawer-contents {
-    width: 100%;
-}
-
-#side.drawer {
-    color: inherit;
-}
-
-#side .drawer-controls {
+#side .controls {
+    float: right;
+    margin-right: -50px;
+    padding: 10px;
+    height: 100%;
+    position: relative;
+    width: 50px;
+    z-index: 500;
     top: 50%;
     transform: translateY(-50%);
     height: auto;
 }
 
-#side .drawer-contents {
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: inherit;	
+#side .controls span:before {
+    content: "\e127";
+}
+
+.open #side .controls span:before {
+    content: "\e128";
 }
 
 @media screen and (max-width: 767px) {
@@ -158,11 +174,11 @@ tr {
     #nav {
 	overflow-y: scroll;
     }
-
+    #main-row.open {
+	padding-left: 280px;
+    }
     #side {
 	width: 280px;
-    }
-    #side.fold {
 	margin-left: -280px;
     }
 }

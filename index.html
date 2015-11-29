@@ -8,7 +8,6 @@
     
     <title>walkdb</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/stylesheets/bootstrap-drawer.min.css" />
     <link rel="canonical" href="/" type="text/html" />	
     <link rel="alternate" media="handheld" href="/mobile.html" type="text/html" />
     <link ng-href="{{themeUri}}" rel="stylesheet" />
@@ -19,7 +18,6 @@
     <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="/javascripts/drawer.min.js"></script>    
     <script src="/javascripts/controllers.js"></script>
     <script src="/javascripts/path_manager.js"></script>
     <script src="/javascripts/jquery.flot.min.js"></script>
@@ -105,12 +103,12 @@
             </ul>
 	</div>
     </div>
-    <div id="main-row" class="panel panel-default has-inner-drawer">
-        <div id="side" class="drawer drawer-inside fold open panel">
-	    <div class="drawer-controls">
-		<a href="javascript:void(0);" aria-foldedopen="false" aria-controls="side" class="btn btn-primary btn-sm" ng-click="toggleDrawer();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+    <div id="main-row" class="open">
+        <div id="side" class="panel">
+	    <div class="controls">
+		    <a href="javascript:void(0);" aria-foldedopen="false" aria-controls="side" class="btn btn-primary btn-sm" ng-click="toggleSide();"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
 	    </div>
-	    <div class="drawer-contents">
+	    <div class="sidebar">
 		    <form class="form-horizontal" role="form">
 			    <input type="hidden" name="latitude" value="{{searchForm.latitude}}" />
 			    <input type="hidden" name="longitude" value="{{searchForm.longitude}}" />

@@ -607,7 +607,7 @@ console.log(item.date);
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
-		if (isMobile) $('.drawer').drawer('toggle');
+		if (isMobile) $scope.toggleSide();
             }
             return false;
 
@@ -616,7 +616,7 @@ console.log(item.date);
             for (var id in $scope.result) {
                 walkService.pathManager.showPath($scope.result[id].path, false);
             }
-	    if (isMobile) $('.drawer').drawer('toggle');
+	    if (isMobile) $scope.toggleSide();
             return false;
         };
 
@@ -707,7 +707,7 @@ console.log(item.date);
 		$scope.searchForm.order = 'newest_first';
 	    }
 	    if ((newValue == 'cities' || newValue == 'neighborhood') && isMobile)
-		$('.drawer').drawer('toggle');
+		$scope.toggleSide();
         });
         $scope.$watch('editable', function (newValue, prevValue) {
             if (walkService.pathManager.get('editable') != newValue)
@@ -759,8 +759,11 @@ console.log(item.date);
 	$scope.currentPosition = function () {
 	    walkService.currentPosition();
 	};
-	$scope.toggleDrawer = function () {
-	    $('.drawer').drawer('toggle');
+	$scope.toggleSide = function () {
+	    $('#main-row').toggleClass('open');
+            setTimeout(function () {
+                google.maps.event.trigger(walkService.map, 'resize');
+            }, 500);
 	    return false;
 	};
 	
@@ -774,7 +777,7 @@ console.log(item.date);
             e.stopPropagation();
             e.preventDefault();
         });
-	$('#main-row').height($(window).height() - $('.navbar-header').height());	
+	$('#main-row,#side').outerHeight($(window).height() - $('.navbar-header').height());	
 	$(window).on('resize orientationchange', function () {
 	    $('#main-row').height($(window).height() - $('.navbar-header').height());
 	});
