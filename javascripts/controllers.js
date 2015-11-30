@@ -619,7 +619,7 @@ console.log(item.date);
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
 		$scope.comment_title = data.date + " " + data.title;
-		$scope.comment_body = $sce.trustAsHtml(marked(data.comment));
+		$scope.comment_body = data.comment ? $sce.trustAsHtml(marked(data.comment)) : '';
 		$scope.currentService = 'comment';
 		if (isMobile) $scope.toggleSide();
             }
