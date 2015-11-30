@@ -794,7 +794,7 @@ console.log(item.date);
         });
 	$('#main-row,#side').outerHeight($(window).height() - $('.navbar-header').height());	
 	$(window).on('resize orientationchange', function () {
-	    $('#main-row').height($(window).height() - $('.navbar-header').height());
+	    $('#main-row,#side').height($(window).height() - $('.navbar-header').height());
 	});
     });
 

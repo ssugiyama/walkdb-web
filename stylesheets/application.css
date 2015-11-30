@@ -61,7 +61,8 @@ html, body {
 .sidebar {
     position :relative;
     height: 100%;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #main-row.open {
