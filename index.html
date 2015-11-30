@@ -16,12 +16,13 @@
     <script src="http://www.google.com/jsapi"></script>
     <script src="http://maps.google.com/maps/api/js?sensor=true&libraries=geometry,drawing"></script>
     <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="/javascripts/controllers.js"></script>
     <script src="/javascripts/path_manager.js"></script>
     <script src="/javascripts/jquery.flot.min.js"></script>
     <script src="/javascripts/jquery.flot.resize.min.js"></script>
+    <base href="/"  />
 </head>
 <body>	
     <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
@@ -189,7 +190,7 @@
 		    </p>
 		    <table class="table table-condensed table-striped table-hover">
 			    <tbody id="tbody">
-				    <tr ng-repeat="item in walks" ng-click="showPath(item.id)">
+				    <tr ng-repeat="item in walks" ng-click="linkto('/?show=first&id=' + item.id)">
 					    <td class="hidden-xs id">{{ $index + 1 }}</td>
 					    <td class="date">{{item.date}}</td>
 					    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>

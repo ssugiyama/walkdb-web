@@ -1,7 +1,12 @@
 (function (global) {
     'use strict';
 
-    var module = angular.module('walkApp', []);
+    var module = angular.module('walkApp', [])
+	.config(['$locationProvider', function($locationProvider) {
+	    $locationProvider.html5Mode({
+		enabled: true,
+	    });
+	}]);
     module.factory('walkService', function () {
         var service = function () {
             var self = this;
@@ -377,16 +382,21 @@
 	var isMobile = false;
         //	$scope.selectionLength = 0;
 	$rootScope.$on('$locationChangeSuccess', function () {
-	    console.log($location.url());
+	    console.log('url=' +$location.url());	    
 	    if ($location.url()) {
-		if ($location.url().substring(0,2) != "/s") return;
+		var url = '/search' + $location.url();
 		var params = $location.search();
 		for (var key in params) {
-		    if (params[key] && key != "show") $scope.searchForm[key] = params[key];
+		    if (params[key] && key == 'id' && $scope.result[params[key]]) {
+			return $scope.showPath(params[key]);
+		    }
+		    else if (params[key] && key != "show") {
+			$scope.searchForm[key] = params[key];
+		    } 
 		}
 		if (needsRender) renderSearchForm();
 		needsRender = true;
-		$http.get($location.url()).success(function (data) {
+		$http.get(url).success(function (data) {
 		    searchCallback(data, params["show"]);
 		});
 	    }
@@ -494,6 +504,9 @@
         $scope.getThemeTitle = function (name) {
             return self.themeInfo[name].title;
         };
+	$scope.linkto = function (path) {
+	    $location.url(path);
+	};
         $scope.search = function () {
             if ($scope.searchForm.filter == 'neighborhood') {
                 $scope.searchForm.latitude = walkService.distanceWidget.getCenter().lat();
@@ -521,7 +534,7 @@
 	    delete $scope.searchForm["id"];
 	    delete $scope.searchForm["date"];
 	    needsRender = false;
-	    var url = '/search?' + $.param($scope.searchForm);
+	    var url = '/?' + $.param($scope.searchForm);
 	    $location.url(url);
 //            $http.get(url).success(function (data) {
 //                searchCallback(data, false);
@@ -559,7 +572,7 @@ console.log(item.date);
         };
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
-            var href = location.protocol + "//" + location.host + "/#/search?show=first&id=" + item.id;
+            var href = location.protocol + "//" + location.host + "/?show=first&id=" + item.id;
             var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
             var link = angular.element('<a></a>');
             link.attr('href', href);
@@ -675,7 +688,8 @@ console.log(item.date);
             $scope.selection.path = $scope.update_path ? walkService.pathManager.getEncodedSelection() : null;
             $http.post('/save', $scope.selection).success(function (data) {
                 $(walkService.admin).modal('hide');
-		var url = '/search?id=' + data[0].id
+		if ($scope.result[data[0].id]) delete $scope.result[data[0].id];
+		var url = '/?show=first&id=' + data[0].id;
 		$location.url(url);
             }).error(function (data) {
                 alert(data);
