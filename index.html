@@ -22,6 +22,7 @@
     <script src="/javascripts/path_manager.js"></script>
     <script src="/javascripts/jquery.flot.min.js"></script>
     <script src="/javascripts/jquery.flot.resize.min.js"></script>
+    <script src="/javascripts/marked.js"></script>    
     <base href="/"  />
 </head>
 <body>	
@@ -227,7 +228,7 @@
 	    <div id="comment-box" ng-show="currentService == 'comment'">
                 <button class="close" ng-click="closeService()">&times;</button>
 		<div class="well well-sm">
-		    <h3>{{comment_title}}</h3>
+		    <h2 class="h5">{{comment_title}}</h2>
 		    <div ng-bind-html="comment_body"></div>
 		</div>
 	    </div>

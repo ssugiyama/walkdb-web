@@ -387,7 +387,7 @@
 		var url = '/search' + $location.url();
 		var params = $location.search();
 		for (var key in params) {
-		    if (params[key] && key == 'id' && $scope.result[params[key]]) {
+		    if (params[key] && key == 'id' && $scope.result && $scope.result[params[key]]) {
 			return $scope.showPath(params[key]);
 		    }
 		    else if (params[key] && key != "show") {
@@ -619,7 +619,7 @@ console.log(item.date);
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
 		$scope.comment_title = data.date + " " + data.title;
-		$scope.comment_body = $sce.trustAsHtml(data.comment);
+		$scope.comment_body = $sce.trustAsHtml(marked(data.comment));
 		$scope.currentService = 'comment';
 		if (isMobile) $scope.toggleSide();
             }
