@@ -688,8 +688,13 @@ console.log(item.date);
             $scope.selection.path = $scope.update_path ? walkService.pathManager.getEncodedSelection() : null;
             $http.post('/save', $scope.selection).success(function (data) {
                 $(walkService.admin).modal('hide');
-		if ($scope.result[data[0].id]) delete $scope.result[data[0].id];
-		var url = '/?show=first&id=' + data[0].id;
+		var obj = $scope.result[data[0].id];
+		if (obj) {
+		    for (var key in data[0]) {
+			obj[key] = data[0][key];
+		    }
+		}
+		var url = '/?show=first&id=' + data[0].id + '&timestamp=' + new Date(data[0].updated_at).getTime();
 		$location.url(url);
             }).error(function (data) {
                 alert(data);
