@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
+
     <title>walkdb</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-    <link rel="canonical" href="/" type="text/html" />	
+    <link rel="canonical" href="/" type="text/html" />
     <link rel="alternate" media="handheld" href="/mobile.html" type="text/html" />
     <link ng-href="{{themeUri}}" rel="stylesheet" />
     <link href="/stylesheets/application.css" media="screen" rel="stylesheet" />
@@ -22,17 +22,17 @@
     <script src="/javascripts/path_manager.js"></script>
     <script src="/javascripts/jquery.flot.min.js"></script>
     <script src="/javascripts/jquery.flot.resize.min.js"></script>
-    <script src="/javascripts/marked.js"></script>    
+    <script src="/javascripts/marked.js"></script>
     <base href="/"  />
 </head>
-<body>	
+<body>
     <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
 	<div class="navbar-header">
 	    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-content" aria-expanded="false">
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
-	    </button>	
+	    </button>
             <a class="navbar-brand" href="https://github.com/ssugiyama/walkdb">walkdb</a>
 	</div>
 	<div class="collapse navbar-collapse" id="navbar-content">
@@ -96,7 +96,7 @@
 		<div class="input-group">
                     <span class="input-group-btn">
 			<button class="btn btn-default" type="button" ng-click="currentPosition(address)"><span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span></button>
-                    </span>		    
+                    </span>
                     <input type="text" class="form-control" placeholder="Move to ..." ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
 		</div><!-- /input-group -->
             </form>
@@ -191,7 +191,7 @@
 		    </p>
 		    <table class="table table-condensed table-striped table-hover">
 			    <tbody id="tbody">
-				    <tr ng-repeat="item in walks" ng-click="linkto('/?show=first&id=' + item.id)">
+				    <tr ng-repeat="item in walks" ng-click="linkto('/?id=' + item.id)">
 					    <td class="hidden-xs id">{{ $index + 1 }}</td>
 					    <td class="date">{{item.date}}</td>
 					    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
@@ -200,13 +200,13 @@
 						    <a href="javascript:void(0)" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>
 					    </td>
 				    </tr>
-				    
+
 			    </tbody>
 		    </table>
 		    <button class="btn btn-primary btn-more col-xs-offset-3 col-xs-6" ng-show="params" ng-click="getNext(params)">more</button>
 	    </div>
         </div><!-- /side -->
-	    
+
         <div id="main">
             <div my-map id="map"></div>
             <div id="elevation-box" ng-show="currentService == 'elevation'">
@@ -214,7 +214,7 @@
                 <div my-elevation></div>
             </div>
             <div id="panorama-box" ng-show="currentService == 'panorama'">
-                <button class="close" ng-click="closeService()">&times;</button>		
+                <button class="close" ng-click="closeService()">&times;</button>
                 <div id="panorama" my-panorama></div>
                 <div id="panorama-controls">
                     <button class="btn btn-sm" ng-click="backwardPanorama()"><span class="glyphicon glyphicon-fast-backward"></span></button>
@@ -259,7 +259,7 @@
                     <h4 class="modal-title"><span ng-if="!selection.id">Create</span><span ng-if="selection.id">Update</span></h4>
                 </div>
                 <form ng-sbmit="save()" class="form-horizontal" role="form">
-                  <input type="hidden" ng-model="selection.id" class="form-control" />		
+                  <input type="hidden" ng-model="selection.id" class="form-control" />
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="control-label col-xs-3" for="date">date</label>

@@ -276,7 +276,7 @@
 		var self = this;
 		if (navigator.geolocation) {
 		    navigator.geolocation.getCurrentPosition(function (pos) {
-			
+
 			var center = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 			self.map.setCenter(center);
 		    }, function () {
@@ -382,7 +382,7 @@
 	var isMobile = false;
         //	$scope.selectionLength = 0;
 	$rootScope.$on('$locationChangeSuccess', function () {
-	    console.log('url=' +$location.url());	    
+	    console.log('url=' +$location.url());
 	    if ($location.url()) {
 		var url = '/search' + $location.url();
 		var params = $location.search();
@@ -392,12 +392,13 @@
 		    }
 		    else if (params[key] && key != "show") {
 			$scope.searchForm[key] = params[key];
-		    } 
+		    }
 		}
 		if (needsRender) renderSearchForm();
 		needsRender = true;
+                var show = params["show"] || (params['id'] && 'first');
 		$http.get(url).success(function (data) {
-		    searchCallback(data, params["show"]);
+		    searchCallback(data, show);
 		});
 	    }
 	    else {
@@ -411,7 +412,7 @@
 	    switch ($scope.searchForm.filter) {
 	    case "neighborhood":
 		walkService.distanceWidget.setRadius(parseInt($scope.searchForm.radius));
-		walkService.distanceWidget.setCenter(new google.maps.LatLng($scope.searchForm.latitude, $scope.searchForm.longitude));		
+		walkService.distanceWidget.setCenter(new google.maps.LatLng($scope.searchForm.latitude, $scope.searchForm.longitude));
 		break;
 	    case "cities":
                 $.ajax({
@@ -426,11 +427,11 @@
 		break;
 	    case "crossing":
 	    case "hausdorff":
-                walkService.pathManager.showPath($scope.searchForm.searchPath, true);		
+                walkService.pathManager.showPath($scope.searchForm.searchPath, true);
 		break;
 	    }
 	}
-	
+
         function searchCallback (data, show, append) {
             if (append) {
                 $scope.walks.push.apply($scope.walks, data.rows);
@@ -560,19 +561,19 @@
 	    }
 	    if (item) {
 console.log(item.date);
-                $scope.selection = angular.copy(item);		
+                $scope.selection = angular.copy(item);
                 $scope.update_path = false;
                 $scope.update_path_disabled = !walkService.pathManager.selection;
 	    }
 	    else {
-		$scope.selection = {};		
+		$scope.selection = {};
                 $scope.update_path = true;
 	    }
             $(walkService.admin).modal('show');
         };
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
-            var href = location.protocol + "//" + location.host + "/?show=first&id=" + item.id;
+            var href = location.protocol + "//" + location.host + "/?id=" + item.id;
             var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
             var link = angular.element('<a></a>');
             link.attr('href', href);
@@ -607,7 +608,7 @@ console.log(item.date);
 		tooltip.popup("open", {
 		    transition: transition
 		});
-		if (duration != null) 
+		if (duration != null)
 		    setTimeout(function () {
 			tooltip.popup("close");
 		    }, duration);
@@ -694,7 +695,7 @@ console.log(item.date);
 			obj[key] = data[0][key];
 		    }
 		}
-		var url = '/?show=first&id=' + data[0].id + '&timestamp=' + new Date(data[0].updated_at).getTime();
+		var url = '/?id=' + data[0].id + '&timestamp=' + new Date(data[0].updated_at).getTime();
 		$location.url(url);
             }).error(function (data) {
                 alert(data);
@@ -786,7 +787,7 @@ console.log(item.date);
             }, 500);
 	    return false;
 	};
-	
+
         $(document).bind("drop", function (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -797,7 +798,7 @@ console.log(item.date);
             e.stopPropagation();
             e.preventDefault();
         });
-	$('#main-row,#side').outerHeight($(window).height() - $('.navbar-header').height());	
+	$('#main-row,#side').outerHeight($(window).height() - $('.navbar-header').height());
 	$(window).on('resize orientationchange', function () {
 	    $('#main-row,#side').height($(window).height() - $('.navbar-header').height());
 	});
