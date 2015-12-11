@@ -382,7 +382,8 @@
 	var isMobile = false;
         //	$scope.selectionLength = 0;
 	$rootScope.$on('$locationChangeSuccess', function () {
-	    console.log('url=' +$location.url());
+	    $scope.title = 'walkdb';
+	    $scope.canonical = '/';
 	    if ($location.url()) {
 		var url = '/search' + $location.url();
 		var params = $location.search();
@@ -619,10 +620,12 @@ console.log(item.date);
 	    var data = $scope.result[id];
             if (data) {
                 walkService.pathManager.showPath(data.path, true);
-		$scope.comment_title = data.date + " " + data.title;
+		$scope.title = $scope.comment_title = data.date + " " + data.title;
+		$scope.canonical = '/?id=' + id;
 		$scope.comment_body = data.comment ? $sce.trustAsHtml(marked(data.comment)) : '';
 		$scope.currentService = 'comment';
 		if (isMobile) $scope.toggleSide();
+		
             }
             return false;
 
