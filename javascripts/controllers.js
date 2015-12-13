@@ -449,8 +449,7 @@
             });
 	    setTimeout(function () {
 		if (data.count > 0) {
-		    var w = $('#side').outerWidth() - $('td.id').outerWidth() - $('td.date').outerWidth() - $('td.way').outerWidth() - $('td.actions').outerWidth();
-		    console.log(w);
+		    var w = $('#side').innerWidth() - $('td.id').outerWidth() - $('td.date').outerWidth() - $('td.way').outerWidth() - $('td.actions').outerWidth() - 20;
 		    $('td.name div').outerWidth(w - 6);
 		}
 	    }, 0);
@@ -494,10 +493,6 @@
         $scope.searchForm.order = "newest_first";
         $scope.searchForm.limit = 20;
 
-        // dirty hack
-//        setTimeout(function () {
-//            google.maps.event.trigger(walkService.map, 'resize');
-//        }, 500);
         $scope.setTheme = function (name) {
 	    if ($scope.themes.indexOf(name) == -1) name = 'Default';
             $scope.themeUri = self.themeInfo[name].uri;
@@ -561,7 +556,6 @@
 		return;
 	    }
 	    if (item) {
-console.log(item.date);
                 $scope.selection = angular.copy(item);
                 $scope.update_path = false;
                 $scope.update_path_disabled = !walkService.pathManager.selection;
@@ -588,7 +582,6 @@ console.log(item.date);
             elm.attr('data-text', body);
             elm.attr('data-url', href);
             $('#twitter_div').html(elm);
-            console.log($('#twitter_div').html());
             twttr.widgets.load();
             $(walkService.info).modal('show');
         };
@@ -801,9 +794,19 @@ console.log(item.date);
             e.stopPropagation();
             e.preventDefault();
         });
-	$('#main-row,#side').outerHeight($(window).height() - $('.navbar-header').height());
+	var timer;
+	function layoutScreen () {
+	    $('#main-row,#side').outerHeight($(window).height() - $('.navbar-header').height());
+	    setTimeout(function () {
+		google.maps.event.trigger(walkService.map, 'resize');
+	    }, 500);
+	}
+	layoutScreen();
 	$(window).on('resize orientationchange', function () {
-	    $('#main-row,#side').height($(window).height() - $('.navbar-header').height());
+	    if (timer !== false) {
+		clearTimeout(timer);
+	    }	    
+	    timer = setTimeout(layoutScreen, 500);
 	});
     });
 

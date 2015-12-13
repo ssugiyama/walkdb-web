@@ -5,6 +5,10 @@
 #map img { max-width: none; }
 #elevation-box img { max-width: none; }
 #panorama-box img {max-width: none; }
+.table-wrapper {
+    width: 100%;
+    padding-right: 20px;
+}
 #side td {
     padding: 2px 3px;
 }
