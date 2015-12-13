@@ -569,17 +569,17 @@
         $scope.showInfo = function (item, ev) {
             ev.stopImmediatePropagation();
             var href = location.protocol + "//" + location.host + "/?id=" + item.id;
-            var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)';
+            var body = item.date + ': ' + item.title + ' (' + $filter('number')(item.length, 1) + 'km)' 
+	    var detail = body + ' "' + item.comment.replace(/[\n\r]/g, '').substring(0, 40) + '……"';
             var link = angular.element('<a></a>');
             link.attr('href', href);
             link.attr('target', '_blank');
             link.text(body);
             $scope.info_link = link.get(0).outerHTML;
             $scope.info_url  = href;
-            $scope.twitter_params = 'text=' + encodeURIComponent($scope.info_title) + '&url=' + encodeURIComponent($scope.info_uri);
             var elm = angular.element('<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en"  data-count="none" data-size="large">Tweet</a>');
             elm.attr('data-hashtags', $('#twitter_div').attr('data-hashtags'));
-            elm.attr('data-text', body);
+            elm.attr('data-text', detail);
             elm.attr('data-url', href);
             $('#twitter_div').html(elm);
             twttr.widgets.load();
