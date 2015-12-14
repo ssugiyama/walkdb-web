@@ -197,10 +197,6 @@
 					    <td class="hidden-xs id">{{ $index + 1 }}</td>
 					    <td class="date">{{item.date}}</td>
 					    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
-					    <td class="actions">
-						    <a href="javascript:void(0)" class="glyphicon glyphicon-info-sign" ng-click="showInfo(item, $event)"></a>
-						    <a href="javascript:void(0)" class="glyphicon glyphicon-pencil" ng-click="showAdmin(item, $event)"></a>
-					    </td>
 				    </tr>
 
 			    </tbody>
@@ -229,11 +225,13 @@
                 </div>
             </div>
 	    <div id="comment-box" ng-show="currentService == 'comment'">
-                <button class="close" ng-click="closeService()">&times;</button>
-		<div class="well well-sm">
-		    <h2 class="h5">{{comment_title}}</h2>
-		    <div ng-bind-html="comment_body"></div>
-		</div>
+            <button class="close" ng-click="closeService()">&times;</button>
+	    <div class="well well-sm">
+	    <button id="editButton" class="btn btn-xs btn-danger" aria-hidden="true" type="button" ng-click="showAdmin(currentData, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
+            <div id="twitter_div" data-hashtags="walkdb">
+	    </div>	    
+	    <h2 class="h5">{{comment_title}}</h2>
+	    <div ng-bind-html="comment_body"></div>
 	    </div>
         </div><!-- /main -->
     </div><!-- /main-row -->
@@ -297,34 +295,6 @@
             </div>
         </div>
     </div>
-    <div my-info class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content form-horizontal">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Info</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">url</label>
-                        <div class="col-xs-10">
-                            <input type="text" readonly="readonly" ng-model="info_url" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">link</label>
-                        <div class="col-xs-10">
-                            <textarea readonly="readonly" ng-model="info_link" class="form-control"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <label class="control-label col-xs-2">Share</label>
-                    <div class="col-xs-10" id="twitter_div" data-hashtags="walkdb,散歩DB">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </body>
 </html>
