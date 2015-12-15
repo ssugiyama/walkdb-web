@@ -225,13 +225,13 @@
                 </div>
             </div>
 	    <div id="comment-box" ng-show="currentService == 'comment'">
-            <button class="close" ng-click="closeService()">&times;</button>
-	    <div class="well well-sm">
-	    <button id="editButton" class="btn btn-xs btn-danger" aria-hidden="true" type="button" ng-click="showAdmin(currentData, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
-            <div id="twitter_div" data-hashtags="walkdb">
-	    </div>	    
-	    <h2 class="h5">{{comment_title}}</h2>
-	    <div ng-bind-html="comment_body"></div>
+                <button class="close" ng-click="closeService()">&times;</button>
+		<div>
+		<button id="editButton" class="btn btn-xs btn-danger" aria-hidden="true" type="button" ng-click="showAdmin(currentData, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
+		<div id="twitter_div" data-hashtags="walkdb">
+		</div>	    
+		<h2 class="h5">{{comment_title}}</h2>
+		<div ng-bind-html="comment_body"></div>
 	    </div>
         </div><!-- /main -->
     </div><!-- /main-row -->
