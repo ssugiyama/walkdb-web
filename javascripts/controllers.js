@@ -454,7 +454,7 @@
 	    }
         }
 
-        $http.get('http://api.bootswatch.com/3/').success(function (data) {
+        $http.get('https://bootswatch.com/api/3.json').success(function (data) {
 	    var themeInfo = {
 		Default : {
 		    uri:   null,
