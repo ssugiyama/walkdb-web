@@ -267,6 +267,7 @@
                 this.geocoder.geocode( { 'address': address}, function(results, status) {
 		    if (status == google.maps.GeocoderStatus.OK) {
 			self.map.setCenter(results[0].geometry.location);
+			$('#modal-move').modal('hide');
 		    } else {
 			alert("Geocode was not successful for the following reason: " + status);
 		    }
@@ -539,6 +540,9 @@
             $scope.path_json = walkService.pathManager.selectionAsGeoJSON();
             $(walkService.modal).modal('show');
         };
+	$scope.showGeocode = function () {
+	    $('#modal-move').modal('show');
+	};
         $scope.showAdmin = function (item, ev) {
 	    if (ev) ev.stopImmediatePropagation();
 
