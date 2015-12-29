@@ -247,7 +247,6 @@
                     <textarea ng-model="path_json" placeholder="input text or drag JSON file."></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" ng-click="importJSON(path_json)">Import</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -261,10 +260,12 @@
                     <h4 class="modal-title">Geocode</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="address" ng-model="address">		    
+		    <div class="form-group">
+                        <label class="control-label col-xs-2">address</label>
+			<input type="text" class="form-inline-control col-xs-10" ng-model="address" ng-keypress="$event.keyCode == 13 ? geocoderSearch(address) : false">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" ng-click="geocoderSearch(address)">Move to</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -275,7 +276,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><span ng-if="!selection.id">Create</span><span ng-if="selection.id">Update</span></h4>
+                    <h4 class="modal-title"><span ng-if="!selection.id">New Walk</span><span ng-if="selection.id">Update Walk</span></h4>
                 </div>
                 <form ng-sbmit="save()" class="form-horizontal" role="form">
                   <input type="hidden" ng-model="selection.id" class="form-control" />
@@ -283,7 +284,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3" for="date">date</label>
                             <div class="col-xs-9">
-                                <input type="text" name="date" ng-model="selection.date" class="form-control" />
+∑                                <input type="text" name="date" ng-model="selection.date" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -293,7 +294,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-xs-3" for="comment">comment(markdown)</label>
+                            <label class="control-label col-xs-3" for="comment">comment<br />(markdown)</label>
                             <div class="col-xs-9">
                                 <textarea name="comment" ng-model="selection.comment" class="form-control" ></textarea>
                             </div>
