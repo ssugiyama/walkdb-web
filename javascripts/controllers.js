@@ -372,7 +372,7 @@
         var self = this;
 	var needsRender = true;
 	var isMobile = false;
-        //	$scope.selectionLength = 0;
+	$scope.currentIndex = undefined;
 	$rootScope.$on('$locationChangeSuccess', function () {
 	    $scope.title = 'walkdb';
 	    $scope.canonical = '/';
@@ -432,10 +432,10 @@
             else {
                 $scope.result = {};
                 $scope.walks = data.rows;
+		$scope.currentIndex = -1;
             }
             $scope.params = data.params;
             $scope.total_count = data.count;
-
             data.rows.forEach(function (item, index, array) {
                 $scope.result[item.id] = item;
             });
@@ -450,7 +450,9 @@
                 $scope.showPaths();
 		break;
 	    case "first":
-		$scope.showPath(data.rows[0].id);
+		$scope.currentIndex = 0;
+		if ($scope.searchForm['id'])
+		    $scope.showPath(data.rows[0].id);
 		break;
 	    }
         }
@@ -588,7 +590,10 @@
 	function prepareTwitter(data) {
 	    var href = location.protocol + "//" + location.host + "/?id=" + data.id;
 	    var body = data.date + ': ' + data.title + ' (' + $filter('number')(data.length, 1) + 'km)' 
-	    var detail = body + ' "' + data.comment.replace(/[\n\r]/g, '').substring(0, 40) + '……"';
+	    var detail = body;
+	    if (data.comment) {
+		detail += ' "' +data.comment.replace(/[\n\r]/g, '').substring(0, 40) + '……"';
+	    }
 	    var elm = angular.element('<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en"  data-size="small">Tweet</a>');
             elm.attr('data-hashtags', $('#twitter_div').attr('data-hashtags'));
             elm.attr('data-text', detail);
@@ -724,6 +729,10 @@
                 google.maps.event.trigger(walkService.map, 'resize');
             }, 0);
         });
+        $scope.$watch('currentIndex', function (newValue, prevValue) {
+	    if (newValue !== undefined && newValue >= 0)
+		$scope.linkto('/?id=' + $scope.walks[newValue].id);
+        });	
 	$("#navbar-content").on('hidden.bs.collapse', function (newValue, prevValue) {
             setTimeout(function () {
                 google.maps.event.trigger(walkService.map, 'resize');

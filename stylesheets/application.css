@@ -129,7 +129,7 @@ tr {
     flex: 0 0 40% ;
     border: inset;
 }
-#comment-box > div {
+#comment-box .body {
     position: absolute;
     overflow: auto;
     top: 25px;
@@ -139,6 +139,10 @@ tr {
     padding: 10px 20px;
 }
 
+#comment-box .control {
+    width: 100%;
+    text-align: center;
+}
 
 #twitter_div, #editButton {
     float: right;

@@ -34,7 +34,7 @@
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 	    </button>
-            <a class="navbar-brand" href="https://github.com/ssugiyama/walkdb">walkdb</a>
+            <a class="navbar-brand" href="/">walkdb</a>
 	</div>
 	<div class="collapse navbar-collapse" id="navbar-content">
             <ul class="nav navbar-nav">
@@ -194,7 +194,7 @@
 		    <div class="table-wrapper">
 		    <table class="table table-condensed table-striped table-hover">
 			    <tbody id="tbody">
-				    <tr ng-repeat="item in walks" ng-click="linkto('/?id=' + item.id)">
+				    <tr ng-repeat="item in walks" ng-click="$parent.currentIndex = $index">
 					    <td class="hidden-xs id">{{ $index + 1 }}</td>
 					    <td class="date">{{item.date}}</td>
 					    <td class="name"><div>{{item.title}}</div></td><td class="way">{{show_distance && item.distance !== undefined ? item.distance : item.length | number:1  }}</td>
@@ -226,14 +226,18 @@
                 </div>
             </div>
 	    <div id="comment-box" ng-show="currentService == 'comment'">
+		<div class="control">
+                    <button class="btn btn-sm" ng-click="currentIndex = currentIndex - 1" ng-disabled="currentIndex <= 0"><span class="glyphicon glyphicon-arrow-left"></span></button>
+                    <button class="btn btn-sm" ng-click="currentIndex = currentIndex + 1" ng-disabled="currentIndex >= walks.length - 1"><span class="glyphicon glyphicon-arrow-right"></span></button>
+		</div>
                 <button class="close" ng-click="closeService()">&times;</button>
-		<div>
-		<button id="editButton" class="btn btn-xs btn-danger" aria-hidden="true" type="button" ng-click="showAdmin(currentData, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
-		<div id="twitter_div" data-hashtags="walkdb">
-		</div>	    
-		<h2 class="h5">{{comment_title}}</h2>
-		<div ng-bind-html="comment_body"></div>
-	    </div>
+		<div class="body">
+		    <button id="editButton" class="btn btn-xs btn-danger" aria-hidden="true" type="button" ng-click="showAdmin(currentData, $event)"><span class="glyphicon glyphicon-pencil"></span></button>
+		    <div id="twitter_div" data-hashtags="walkdb">
+		    </div>	    
+		    <h2 class="h5">{{comment_title}}</h2>
+		    <div ng-bind-html="comment_body"></div>
+		</div>
         </div><!-- /main -->
     </div><!-- /main-row -->
     <div my-modal class="modal fade">
