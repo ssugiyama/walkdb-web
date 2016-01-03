@@ -374,7 +374,7 @@
 	var isMobile = false;
 	$scope.currentIndex = undefined;
 	$rootScope.$on('$locationChangeSuccess', function () {
-	    $scope.title = 'walkdb';
+	    $scope.title = 'walklog';
 	    $scope.canonical = '/';
 	    if ($location.url()) {
 		var url = '/search' + $location.url();
