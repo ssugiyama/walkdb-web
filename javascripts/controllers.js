@@ -611,7 +611,7 @@
 		$scope.comment_body = data.comment ? $sce.trustAsHtml(marked(data.comment)) : '';
 		$scope.currentService = 'comment';
 		prepareTwitter(data);
-		if (isMobile) $scope.toggleSide();
+		if (isMobile && $('#main-row').hasClass('open')) $scope.toggleSide();
             }
             return false;
 
