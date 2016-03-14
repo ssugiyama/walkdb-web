@@ -599,7 +599,7 @@
             elm.attr('data-text', detail);
             elm.attr('data-url', href);
             $('#twitter_div').html(elm);	    
-	    twttr.widgets.load();
+	    if (global.twttr) global.twttr.widgets.load();
 	}
         $scope.showPath = function (id) {
 	    var data = $scope.result[id];
