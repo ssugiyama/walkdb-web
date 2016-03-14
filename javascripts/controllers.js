@@ -589,7 +589,7 @@
 	}
 	function prepareTwitter(data) {
 	    var href = location.protocol + "//" + location.host + "/?id=" + data.id;
-	    var body = data.date + ': ' + data.title + ' (' + $filter('number')(data.length, 1) + 'km)' 
+	    var body = data.date + ': ' + data.title + ' (' + $filter('number')(data.length, 1) + 'km)'; 
 	    var detail = body;
 	    if (data.comment) {
 		detail += ' "' +data.comment.replace(/[\n\r]/g, '').substring(0, 40) + '……"';
@@ -606,7 +606,7 @@
             if (data) {
 		$scope.currentData = data;
                 walkService.pathManager.showPath(data.path, true);
-		$scope.title = $scope.comment_title = data.date + " " + data.title;
+		$scope.title = $scope.comment_title = data.date + " " + data.title + ' (' + $filter('number')(data.length, 1) + 'km)';
 		$scope.canonical = '/?id=' + id;
 		$scope.comment_body = data.comment ? $sce.trustAsHtml(marked(data.comment)) : '';
 		$scope.currentService = 'comment';
